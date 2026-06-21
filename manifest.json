@@ -1,0 +1,11 @@
+{
+  "name": "fallseed-compliance",
+  "level": 1,
+  "parent": null,
+  "prime": 1193,
+  "meshChannel": "fall-compliance",
+  "spec": "https://www.ai-nativesolutions.com/spec.html",
+  "licence": "MIT",
+  "seal": "◊·κ=1",
+  "updatedAt": "2026-06-21"
+}

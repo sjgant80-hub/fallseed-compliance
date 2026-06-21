@@ -696,17 +696,71 @@ async function persistActiveFrameworks() { await idbPut('config', state.activeFr
 // MESH · BroadcastChannel
 // ═══════════════════════════════════════════════════════════════
 let meshChan;
+// ═══════════════════════════════════════════════════════════════
+// MESH · upgraded · peer tracker on fall-signal · 2026-06-21
+// ═══════════════════════════════════════════════════════════════
+window.__fellowSeeds = window.__fellowSeeds || new Map();
+let __sigChan = null, __meshChan2 = null, __pingTimer = null;
+
+function __seedSelfInfo() {
+  try {
+    return {
+      source: 'fallseed-' + (SEED.manifest.name || 'unknown'),
+      name: SEED.manifest.name || 'unknown',
+      prime: SEED.manifest.prime,
+      version: SEED.manifest.version,
+      level: SEED.manifest.level !== undefined ? SEED.manifest.level : null,
+      parent: SEED.manifest.parent || null,
+      mesh: SEED.manifest.meshChannel,
+      ts: Date.now()
+    };
+  } catch (e) { return { source: 'fallseed-unknown', ts: Date.now() }; }
+}
+
+function __pruneFellowSeeds(maxAgeMs) {
+  const cutoff = Date.now() - (maxAgeMs || 90000);
+  for (const [k, v] of window.__fellowSeeds.entries()) {
+    if (v.lastSeen < cutoff) window.__fellowSeeds.delete(k);
+  }
+}
+
 function initMesh() {
   try {
-    const sig = new BroadcastChannel('fall-signal');
-    sig.postMessage({ source:'fallseed-compliance', type:'hello', prime:SEED.manifest.prime, version:SEED.manifest.version, ts:now() });
-    meshChan = new BroadcastChannel(SEED.manifest.meshChannel || 'fall-compliance');
-    meshChan.onmessage = e => {
-      if (e.data?.type === 'control.updated') {
-        if (state.active === 'controls') render();
+    __sigChan = new BroadcastChannel('fall-signal');
+    // Announce self
+    __sigChan.postMessage({ type: 'hello', ...__seedSelfInfo() });
+    // Listen for hellos + pings + replies
+    __sigChan.onmessage = e => {
+      const m = e.data || {};
+      if (!m.type) return;
+      if (m.type === 'hello' || m.type === 'pong') {
+        if (!m.source || m.source === __seedSelfInfo().source) return;
+        const existing = window.__fellowSeeds.get(m.source) || {};
+        window.__fellowSeeds.set(m.source, { ...existing, ...m, lastSeen: Date.now() });
+        // Trigger a re-render of inspect if visible
+        if (typeof state !== 'undefined' && state.active === 'inspect') {
+          if (typeof render === 'function') try { render(); } catch (e) {}
+        }
+      } else if (m.type === 'ping') {
+        // Reply with our own info so the pinger can discover us
+        try { __sigChan.postMessage({ type: 'pong', ...__seedSelfInfo() }); } catch (e) {}
       }
     };
-  } catch (e) { console.warn('[mesh]', e); }
+    // Periodic ping to refresh peer list (every 30s)
+    __pingTimer = setInterval(() => {
+      try {
+        __sigChan.postMessage({ type: 'ping', ...__seedSelfInfo() });
+        __pruneFellowSeeds(90000);
+      } catch (e) {}
+    }, 30000);
+    // Also try a vertical mesh channel if SEED defines one
+    try {
+      const mc = SEED.manifest.meshChannel;
+      if (mc && mc !== 'fall-signal') {
+        __meshChan2 = new BroadcastChannel(mc);
+      }
+    } catch (e) {}
+  } catch (e) { /* mesh optional */ }
 }
 function meshBroadcast(type, payload) {
   try {
@@ -988,6 +1042,64 @@ window.toggleFramework = async function(key) {
   render();
 };
 
+// ─── Stub framework generation (cascade-driven) ───────────────
+window.generateStubCatalogue = async function(key) {
+  const f = SEED.frameworks[key];
+  if (!f) return;
+  const prompt = `Generate the full ${f.name} control catalogue.
+
+Output STRICT JSON only — no preamble, no markdown fences, no commentary.
+Schema: an array of objects, each with exactly two fields:
+  { "code": "<canonical control identifier>", "title": "<short control title, max 100 chars>" }
+
+For ${f.name} (${f.version}), use the canonical numbering scheme:
+${f.themes.map(t => `  • ${t.code} — ${t.name}`).join('\n')}
+
+${f.generateMe || 'Cover every required control / sub-requirement / criterion.'}
+
+Output JSON ONLY. Start with [ and end with ].`;
+
+  if (state.active !== 'build') switchTab('build');
+  await new Promise(r => setTimeout(r, 150));
+  const inp = document.getElementById('buildPrompt');
+  const out = document.getElementById('buildOutput');
+  if (!inp || !out) { toast('build tab not ready', true); return; }
+  inp.value = prompt;
+  out.className = 'preview-area streaming';
+  out.textContent = '';
+  let acc = '';
+  try {
+    await cascadeChat(prompt, { onChunk: d => { acc += d; out.textContent += d; out.scrollTop = out.scrollHeight; } });
+    out.className = 'preview-area';
+    // Try to parse + auto-apply
+    const m = acc.match(/\[[\s\S]*\]/);
+    if (m) {
+      try {
+        const parsed = JSON.parse(m[0]);
+        if (Array.isArray(parsed) && parsed.length && parsed.every(x => x.code && x.title)) {
+          if (confirm(`Parsed ${parsed.length} controls for ${f.shortName}. Apply to the seed?`)) {
+            SEED.frameworks[key].controls = parsed.map(p => ({ code: String(p.code), title: String(p.title) }));
+            SEED.frameworks[key].stub = false;
+            await idbPut('config', SEED, 'forkedSeed');
+            toast(`✓ ${parsed.length} controls loaded into ${f.shortName}`);
+            switchTab('frameworks');
+          }
+        }
+      } catch (e) { toast('parsed text not valid JSON · raw output kept in Build tab', true); }
+    }
+  } catch (e) {
+    out.className = 'preview-area';
+    out.textContent = '✗ ' + e.message;
+  }
+};
+
+window.generateStubThemes = async function(key) {
+  const f = SEED.frameworks[key];
+  if (!f) return;
+  // Themes are already loaded for stubs — this is a faster path for users who just want headings
+  toast(`${f.shortName} already has ${f.themes.length} themes loaded · use "Generate full catalogue" for sub-controls`);
+};
+
 // ─── FRAMEWORKS ────────────────────────────────────────────────
 function renderFrameworks(main) {
   main.innerHTML = `
@@ -995,7 +1107,8 @@ function renderFrameworks(main) {
     <div class="fw-grid">
       ${Object.entries(SEED.frameworks).map(([k,f]) => {
         const isActive = state.activeFrameworks.includes(k);
-        return `<div class="fw-card ${isActive?'active':''}" onclick="toggleFramework('${k}')">
+        return `<div class="fw-card ${isActive?'active':''}">
+          <div onclick="toggleFramework('${k}')" style="cursor:pointer">
           ${f.stub ? '<span class="stub-flag">stub</span>' : (isActive ? '<span class="active-flag">active</span>' : '')}
           <div class="auth">${esc(f.authority)}</div>
           <div class="name">${esc(f.shortName)}</div>
@@ -1003,10 +1116,15 @@ function renderFrameworks(main) {
           <div class="meta">
             <span>${f.themes.length} themes</span>
             <span>·</span>
-            <span>${f.stub ? '(stub — generate via Build)' : f.controls.length + ' controls'}</span>
+            <span>${f.stub ? '(stub — '+ (f.controls.length||0) +' loaded)' : f.controls.length + ' controls'}</span>
             <span>·</span>
             <span>${esc(f.version)}</span>
           </div>
+          </div>
+          ${f.stub ? `<div class="stub-cta">
+            <button onclick="event.stopPropagation();generateStubCatalogue('${k}')">⊕ Generate full catalogue →</button>
+            <button onclick="event.stopPropagation();generateStubThemes('${k}')">just themes</button>
+          </div>` : ''}
         </div>`;
       }).join('')}
     </div>
@@ -1055,12 +1173,13 @@ async function renderControls(main) {
       <input type="text" placeholder="Search code / title / owner…" id="ctlSearch" value="${esc(state.searchTerm)}">
       <select id="ctlStatus">
         <option value="all">All statuses</option>
-        <option value="pending"     ${state.filterStatus==='pending'?'selected':''}>Pending</option>
-        <option value="inprogress"  ${state.filterStatus==='inprogress'?'selected':''}>In progress</option>
-        <option value="implemented" ${state.filterStatus==='implemented'?'selected':''}>Implemented</option>
-        <option value="evidenced"   ${state.filterStatus==='evidenced'?'selected':''}>Evidenced</option>
-        <option value="audited"     ${state.filterStatus==='audited'?'selected':''}>Audited</option>
-        <option value="na"          ${state.filterStatus==='na'?'selected':''}>N/A</option>
+        <option value="pending"          ${state.filterStatus==='pending'?'selected':''}>Pending</option>
+        <option value="inprogress"       ${state.filterStatus==='inprogress'?'selected':''}>In progress</option>
+        <option value="implemented"      ${state.filterStatus==='implemented'?'selected':''}>Implemented</option>
+        <option value="evidenced"        ${state.filterStatus==='evidenced'?'selected':''}>Evidenced</option>
+        <option value="audited"          ${state.filterStatus==='audited'?'selected':''}>Audited</option>
+        <option value="mappedcandidate"  ${state.filterStatus==='mappedcandidate'?'selected':''}>Mapped candidate</option>
+        <option value="na"               ${state.filterStatus==='na'?'selected':''}>N/A</option>
       </select>
       <select id="ctlTheme">
         <option value="all">All themes</option>
@@ -1097,7 +1216,7 @@ window.editControl = async function(framework, code, title) {
       <div class="field"><label>Code</label><input value="${esc(code)}" disabled></div>
       <div class="field"><label>Status</label>
         <select id="ecStatus">
-          ${['pending','inprogress','implemented','evidenced','audited','na'].map(s => `<option value="${s}" ${existing.status===s?'selected':''}>${s}</option>`).join('')}
+          ${['pending','inprogress','implemented','evidenced','audited','mappedcandidate','na'].map(s => `<option value="${s}" ${existing.status===s?'selected':''}>${s}</option>`).join('')}
         </select>
       </div>
     </div>
@@ -1128,8 +1247,41 @@ window.saveControl = async function(framework, code, title) {
   r.prevHash = chain.prevHash; r.hash = chain.hash;
   await idbPut('controls', r);
   meshBroadcast('control.updated', { id:r.id, framework, code, status });
+
+  // ─── Cross-map writeback ───────────────────────────────────
+  // If this control was marked evidenced or audited, auto-flag mapped controls
+  // as "mappedcandidate" status (visually distinct purple pill) so the user
+  // can see what work just got de-duplicated.
+  let mappedCount = 0;
+  if (status === 'evidenced' || status === 'audited') {
+    const srcKey = `${framework}:${code}`;
+    const mapping = SEED.crossMap.find(m => m.from === srcKey);
+    if (mapping) {
+      for (const targetKey of mapping.to) {
+        const [tFw, tCode] = targetKey.split(':');
+        if (!state.activeFrameworks.includes(tFw)) continue;
+        let mr = recs.find(x => x.framework === tFw && x.controlCode === tCode);
+        if (mr && (mr.status === 'evidenced' || mr.status === 'audited')) continue;
+        if (!mr) {
+          // find title from frameworks catalogue
+          const fw = SEED.frameworks[tFw];
+          const ctlDef = fw?.controls?.find(c => c.code === tCode);
+          mr = { id: uid('ctl'), framework: tFw, controlCode: tCode, title: ctlDef?.title || tCode, created: now() };
+        }
+        mr.status = 'mappedcandidate';
+        mr.mappedFrom = srcKey;
+        mr.lastModified = now();
+        mr.notes = (mr.notes ? mr.notes + '\n' : '') + `[auto] mapped from ${srcKey} (${status}) at ${new Date().toISOString()}`;
+        const c = await chainNext({ kind:'control.crossmap', id:mr.id, mappedFrom:srcKey, status:mr.status });
+        mr.prevHash = c.prevHash; mr.hash = c.hash;
+        await idbPut('controls', mr);
+        mappedCount++;
+      }
+    }
+  }
+
   closeModal();
-  toast('control saved');
+  toast(mappedCount ? `control saved · ${mappedCount} mapped control${mappedCount===1?'':'s'} flagged` : 'control saved');
   render();
 };
 
@@ -1715,7 +1867,18 @@ async function renderInspect(main) {
   main.innerHTML = `
     <div class="section-h"><h2>Inspect</h2><div class="sub">mesh diagnostics</div></div>
     <div class="inspect-grid">
-      <div class="inspect-card"><div class="num">${SEED.manifest.prime}</div><div class="lbl">Seed prime</div></div>
+      <div class="inspect-card"><div class="num">${SEED.manifest.prime}</div>
+    <div class="card" style="margin-top:18px">
+      <h3>About this seed</h3>
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:8px">Level-1 domain seed in the FallSeed family. Root seed (not forked).</p>
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:8px">Implements the Fork Seed primitive — read the <a href="https://www.ai-nativesolutions.com/spec.html" target="_blank" rel="noopener" style="color:var(--brass)">public spec</a> for the four invariants of replication, the SEED schema, and the six-step fork protocol that every conforming seed implements.</p>
+      <p style="font-size:11px;color:var(--cream-muted);font-family:var(--mono);letter-spacing:.06em">level <span style="color:var(--brass)">1</span> · parent <span style="color:var(--brass)">null</span> · MIT</p>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h3>Fellow seeds online</h3>
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:10px">Other FallSeeds reachable on this origin via the <code style="color:var(--brass)">fall-signal</code> mesh. Updates every 30 seconds.</p>
+      <div id="fellowSeedsList" style="font-family:var(--mono);font-size:11px;color:var(--cream-dim)">${(function(){const peers=Array.from(window.__fellowSeeds?.values?.()||[]); if(!peers.length) return '<div style="color:var(--cream-muted)">none detected · open another FallSeed on this domain to see it appear here</div>'; return peers.sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(p=>`<div style="padding:6px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--brass)">${esc(p.source||'?')}</span> · prime <span style="color:var(--brass)">${esc(String(p.prime||'?'))}</span> · v${esc(String(p.version||'?'))} · level ${esc(String(p.level??'?'))}${p.parent?' · forked from '+esc(p.parent):''} · last seen ${Math.round((Date.now()-(p.lastSeen||0))/1000)}s ago</div>`).join('');})()}</div>
+    </div><div class="lbl">Seed prime</div></div>
       <div class="inspect-card"><div class="num">${Object.keys(SEED.frameworks).length}</div><div class="lbl">Frameworks loaded</div></div>
       <div class="inspect-card"><div class="num">${state.activeFrameworks.length}</div><div class="lbl">Active</div></div>
       <div class="inspect-card"><div class="num">${ctlCount}</div><div class="lbl">Control records</div></div>

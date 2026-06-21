@@ -56,3 +56,8 @@ This is **operational scaffolding, not certification**. Certification against IS
 ## Licence
 
 MIT © Simon Gant.
+
+
+## What kind of seed is this?
+
+A **level-1** seed in the FallSeed family. Built on the Fork Seed primitive — see [the spec](https://www.ai-nativesolutions.com/spec.html) for the four invariants of replication, the SEED schema, and the six-step fork protocol that every conforming seed implements.
