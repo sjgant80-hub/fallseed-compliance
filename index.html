@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>◊ FallSeed · Compliance · Progressive Web App (single HTML file)</title>
+<meta name="description" content="FallSeed Compliance — a Progressive Web App (PWA) for multi-framework compliance posture (ISO27001 / Cyber Essentials / SOC 2 / PCI-DSS / NIS2 / DORA). One HTML file. Controls register, evidence library, scope wizard, policy templates, audit cycle, gap analysis, plus a build engine and Fork Seed packager. Installable to desktop and mobile. Works offline.">
+<meta name="prime" content="1193">
+<meta name="seed-level" content="1">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%20%22FallSeed%20Compliance%22%2C%20%22short_name%22%3A%20%22FallSeed-CC%22%2C%20%22start_url%22%3A%20%22.%22%2C%20%22display%22%3A%20%22standalone%22%2C%20%22background_color%22%3A%20%22%230b0a0f%22%2C%20%22theme_color%22%3A%20%22%23b8974a%22%2C%20%22description%22%3A%20%22Sovereign%20compliance%20posture%20%5Cu00b7%20ISO27001%20%5Cu00b7%20Cyber%20Essentials%20%5Cu00b7%20SOC%202%20%5Cu00b7%20PCI-DSS%20%5Cu00b7%20NIS2%20%5Cu00b7%20DORA%22%2C%20%22icons%22%3A%20%5B%7B%22src%22%3A%20%22data%3Aimage/svg%2Bxml%3Butf8%2C%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%25230b0a0f%27/%3E%3Ctext%20x%3D%2732%27%20y%3D%2744%27%20text-anchor%3D%27middle%27%20font-size%3D%2740%27%20fill%3D%27%2523b8974a%27%20font-family%3D%27serif%27%20font-weight%3D%27bold%27%3E%5Cu25ca%3C/text%3E%3C/svg%3E%22%2C%20%22sizes%22%3A%20%22any%22%2C%20%22type%22%3A%20%22image/svg%2Bxml%22%7D%5D%7D">
+<style>
+:root{--void:#0b0a0f;--void-2:#13121a;--ink:#1a1922;--line:#2a2934;--line-soft:#1f1e28;--cream:#e6e1d6;--cream-dim:#a8a395;--cream-muted:#6e6a5e;--brass:#b8974a;--amber:#ff8c00;--ox:#8b1a1a;--green:#4ade80;--red:#ef4444;--blue:#60a5fa;--yellow:#fbbf24;--violet:#a855f7;--serif:Georgia,'Libre Baskerville',ui-serif,serif;--sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;--mono:'IBM Plex Mono','SF Mono',ui-monospace,Menlo,monospace}
+*{margin:0;padding:0;box-sizing:border-box}html,body{background:var(--void);color:var(--cream);font:14px/1.55 var(--sans);min-height:100dvh;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;background:transparent;border:none;color:inherit}
+input,textarea,select{font-family:inherit;background:var(--ink);border:1px solid var(--line);color:var(--cream);border-radius:3px;padding:8px 11px;outline:none;font-size:13px;width:100%}
+textarea{min-height:80px;resize:vertical;font-family:var(--mono);font-size:12px}
+input:focus,textarea:focus,select:focus{border-color:var(--brass)}
+.app{min-height:100dvh;display:grid;grid-template-rows:64px 1fr}
+header{display:flex;align-items:center;border-bottom:1px solid var(--line);background:var(--void-2);user-select:none;padding:0 22px;gap:14px;position:sticky;top:0;z-index:50}
+.brand .mark{width:38px;height:38px;background:linear-gradient(135deg,var(--brass),var(--amber));border-radius:6px;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:22px;color:var(--void)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .name{font-family:var(--serif);font-weight:700;font-size:18px}
+.brand .seal{font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.16em;text-transform:uppercase}
+nav.tabs{display:flex;flex:1;justify-content:center;gap:4px;flex-wrap:wrap;overflow-x:auto}
+nav.tabs button{padding:8px 14px;font-size:13px;color:var(--cream-dim);letter-spacing:0.04em;border-radius:4px;white-space:nowrap}
+nav.tabs button:hover{color:var(--cream);background:var(--ink)}
+nav.tabs button.active{color:var(--brass);background:var(--ink);border-bottom:2px solid var(--brass)}
+.tier{padding:6px 12px;border-radius:3px;font-size:11px;color:var(--cream-dim);font-family:var(--mono);border:1px solid var(--line);letter-spacing:0.06em;text-transform:uppercase;cursor:pointer}
+main{padding:24px 32px 80px;overflow-y:auto;max-width:1400px;margin:0 auto;width:100%}
+.hero{background:linear-gradient(135deg,rgba(184,151,74,0.08),rgba(255,140,0,0.04));border:1px solid var(--brass);border-radius:6px;padding:28px 30px;margin-bottom:24px}
+.hero h1{font-family:var(--serif);font-size:26px;font-weight:700;margin-bottom:8px;color:var(--brass)}
+.hero .lede{font-size:14px;color:var(--cream-dim);line-height:1.7;max-width:920px}
+.hero .v-badge{display:inline-block;background:var(--brass);color:var(--void);font-family:var(--mono);font-size:10px;letter-spacing:0.12em;padding:3px 8px;border-radius:3px;margin-left:10px;vertical-align:middle}
+.section-h{display:flex;justify-content:space-between;align-items:baseline;margin:24px 0 14px;gap:14px;flex-wrap:wrap}
+.section-h h2{font-family:var(--serif);font-size:18px;font-weight:600}
+.section-h .sub{font-family:var(--mono);font-size:11px;color:var(--cream-muted);letter-spacing:0.08em;text-transform:uppercase}
+.card{background:var(--void-2);border:1px solid var(--line);border-radius:5px;padding:18px 20px;margin-bottom:14px}
+.card h3{font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:10px}
+.fw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:18px}
+.fw-card{background:var(--void-2);border:1px solid var(--line);border-radius:5px;padding:18px;cursor:pointer;transition:border-color .15s;position:relative}
+.fw-card:hover{border-color:var(--brass)}
+.fw-card.active{border-color:var(--brass);background:linear-gradient(180deg,rgba(184,151,74,.04),transparent)}
+.fw-card .auth{font-family:var(--mono);font-size:9px;color:var(--brass);letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px}
+.fw-card .name{font-family:var(--serif);font-size:16px;font-weight:600;margin-bottom:4px}
+.fw-card .desc{font-size:12px;color:var(--cream-dim);line-height:1.55;margin-bottom:10px}
+.fw-card .meta{display:flex;gap:10px;font-family:var(--mono);font-size:10px;color:var(--cream-muted)}
+.fw-card .stub-flag{position:absolute;top:10px;right:12px;background:var(--ink);color:var(--violet);font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:11px;letter-spacing:.1em;text-transform:uppercase}
+.fw-card .active-flag{position:absolute;top:10px;right:12px;background:var(--brass);color:var(--void);font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.field label{display:block;font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.btn{padding:8px 16px;border:1px solid var(--brass);border-radius:3px;font-size:12px;color:var(--cream);background:transparent}
+.btn:hover{border-color:var(--amber);color:var(--amber)}
+.btn.brass{background:var(--brass);color:var(--void);border-color:var(--brass);font-weight:600}
+.btn.brass:hover{background:var(--amber)}
+.btn.big{padding:10px 22px;font-size:13px}
+.btn.sm{padding:5px 11px;font-size:11px}
+.btn.ghost{border-color:var(--line);color:var(--cream-dim)}
+.btn.danger{border-color:var(--red);color:var(--red)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--brass);color:var(--void);padding:10px 20px;border-radius:3px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;opacity:0;transition:all .22s;z-index:1100;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--red);color:#fff}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.66);display:none;align-items:flex-start;justify-content:center;z-index:1000;padding:60px 22px;overflow-y:auto}
+.modal-bg.open{display:flex}
+.modal{background:var(--void-2);border:1px solid var(--brass);border-radius:6px;padding:24px 26px;max-width:720px;width:100%;max-height:80vh;overflow-y:auto;position:relative}
+.modal h3{font-family:var(--serif);font-size:18px;margin-bottom:16px;color:var(--brass)}
+.modal .close{position:absolute;top:12px;right:14px;color:var(--cream-muted);font-size:22px;line-height:1}
+.modal .close:hover{color:var(--cream)}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;background:var(--void-2);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.tbl th{background:var(--ink);color:var(--cream-muted);font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:10px 12px;font-weight:600;border-bottom:1px solid var(--line)}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(184,151,74,.04)}
+.tbl td .code{font-family:var(--mono);color:var(--brass);font-size:11px;white-space:nowrap}
+.status-pill{display:inline-block;padding:3px 9px;border-radius:11px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.status-pill.pending{background:rgba(168,163,149,.16);color:var(--cream-dim)}
+.status-pill.inprogress{background:rgba(96,165,250,.15);color:var(--blue)}
+.status-pill.implemented{background:rgba(251,191,36,.15);color:var(--yellow)}
+.status-pill.evidenced{background:rgba(74,222,128,.18);color:var(--green)}
+.status-pill.audited{background:rgba(184,151,74,.2);color:var(--brass)}
+.status-pill.na{background:rgba(110,106,94,.2);color:var(--cream-muted)}
+.controls-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.controls-bar input,.controls-bar select{max-width:240px;font-size:12px}
+.inspect-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.inspect-card{background:var(--ink);border:1px solid var(--line);border-radius:4px;padding:14px}
+.inspect-card .num{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--brass)}
+.inspect-card .lbl{font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.gap-bar{background:var(--ink);border-radius:4px;height:8px;overflow:hidden;border:1px solid var(--line);margin-top:6px}
+.gap-bar > div{height:100%;background:linear-gradient(90deg,var(--brass),var(--amber));transition:width .3s}
+.preview-area{background:var(--ink);border:1px solid var(--line);border-radius:4px;padding:14px;font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--cream-dim);white-space:pre-wrap;max-height:60vh;overflow:auto;min-height:300px}
+.preview-area.busy{color:var(--amber)}
+.preview-area.streaming{color:var(--cream);border-color:var(--green)}
+.preview-area .cursor{display:inline-block;width:8px;height:14px;background:var(--green);animation:blink 1s infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+.example-chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+.example-chips button{padding:5px 10px;font-size:11px;border:1px solid var(--line);border-radius:11px;color:var(--cream-dim);background:var(--ink)}
+.example-chips button:hover{border-color:var(--brass);color:var(--cream)}
+.disclaimer{background:rgba(139,26,26,.12);border:1px solid var(--ox);border-left:3px solid var(--ox);border-radius:3px;padding:12px 16px;margin-bottom:16px;font-size:12px;line-height:1.55;color:var(--cream-dim)}
+.disclaimer strong{color:var(--brass)}
+.provider-row{display:grid;grid-template-columns:auto 90px 1fr 110px 80px;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:3px;margin-bottom:6px;align-items:center;font-size:12px;background:var(--ink)}
+.provider-row .toggle{width:36px;height:20px;background:var(--line);border-radius:11px;position:relative;cursor:pointer;flex-shrink:0}
+.provider-row .toggle.on{background:var(--green)}
+.provider-row .toggle::after{content:'';position:absolute;width:16px;height:16px;background:var(--cream);border-radius:50%;top:2px;left:2px;transition:left .2s}
+.provider-row .toggle.on::after{left:18px}
+.provider-row .nm{font-family:var(--mono);font-size:11px;color:var(--cream);font-weight:600}
+.provider-row .tier-tag{font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:2px 6px;border-radius:3px;text-transform:uppercase;text-align:center}
+.provider-row .tier-tag.t1{background:rgba(74,222,128,.15);color:var(--green)}
+.provider-row .tier-tag.t2{background:rgba(96,165,250,.15);color:var(--blue)}
+.provider-row .tier-tag.tf{background:rgba(168,85,247,.15);color:var(--violet)}
+.provider-row .tier-tag.tp{background:rgba(255,140,0,.15);color:var(--amber)}
+.provider-row .key-input{padding:5px 8px;font-size:11px}
+.provider-row .status-mini{font-family:var(--mono);font-size:10px;color:var(--cream-muted);text-align:right}
+.cascade-trace{font-family:var(--mono);font-size:11px;background:var(--ink);border:1px solid var(--line);border-radius:3px;padding:10px 12px;margin-top:8px;max-height:200px;overflow-y:auto}
+.cascade-trace .line{padding:3px 0;border-bottom:1px solid var(--line-soft)}
+.cascade-trace .line:last-child{border-bottom:none}
+.cascade-trace .line.ok{color:var(--green)}
+.cascade-trace .line.fail{color:var(--cream-muted)}
+.cascade-trace .line .t{color:var(--cream-muted);margin-right:8px}
+.cascade-trace .line .p{color:var(--brass);font-weight:600}
+.evidence-item{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:3px;margin-bottom:8px;background:var(--ink);align-items:center}
+.evidence-item .title{font-weight:600;color:var(--cream)}
+.evidence-item .meta{font-family:var(--mono);font-size:10px;color:var(--cream-muted);margin-top:3px;letter-spacing:.06em}
+.evidence-item .meta .hash{color:var(--brass)}
+.policy-row{display:grid;grid-template-columns:80px 1fr auto;gap:12px;padding:11px 14px;border:1px solid var(--line);border-radius:3px;margin-bottom:6px;background:var(--ink);align-items:center}
+.policy-row .code{font-family:var(--mono);color:var(--brass);font-weight:600;font-size:12px}
+.policy-row .title{font-weight:600;color:var(--cream)}
+.policy-row .fws{font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:.06em;margin-top:3px}
+.scope-item{display:grid;grid-template-columns:90px 1fr auto;gap:12px;padding:10px 14px;border:1px solid var(--line);border-radius:3px;margin-bottom:6px;background:var(--ink);align-items:center}
+.scope-item .kind{font-family:var(--mono);font-size:10px;color:var(--violet);letter-spacing:.08em;text-transform:uppercase}
+.audit-row{padding:12px 14px;border:1px solid var(--line);border-radius:3px;margin-bottom:8px;background:var(--ink)}
+.audit-row .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.audit-row .head .title{font-weight:600}
+.audit-row .meta{font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:.06em}
+.empty-state{padding:32px 24px;text-align:center;color:var(--cream-muted);background:var(--ink);border:1px dashed var(--line);border-radius:5px;font-size:13px}
+.crossmap-row{display:grid;grid-template-columns:200px 1fr;gap:14px;padding:10px 14px;border:1px solid var(--line);border-radius:3px;margin-bottom:6px;background:var(--ink);align-items:start}
+.crossmap-row .src{font-family:var(--mono);color:var(--brass);font-size:11px}
+.crossmap-row .targets{display:flex;flex-wrap:wrap;gap:6px}
+.crossmap-row .target-pill{font-family:var(--mono);font-size:10px;background:var(--void);padding:3px 8px;border-radius:11px;border:1px solid var(--line);color:var(--cream-dim);letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="mark">◊</div>
+      <div>
+        <div class="name">FallSeed · Compliance</div>
+        <div class="seal">level-1 seed · prime 1193 · ◊·κ=1</div>
+      </div>
+    </div>
+    <nav class="tabs"></nav>
+    <div class="tier">v2.0</div>
+  </header>
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal">
+    <button class="close" onclick="closeModal()">×</button>
+    <h3 id="modalTitle"></h3>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<script>
+'use strict';
+
+const SEED_DEFAULT = {
+  manifest: {
+    name: 'compliance-firm',
+    vertical: 'Compliance · multi-framework · ISO27001 / Cyber Essentials / SOC2 / PCI-DSS / NIS2 / DORA',
+    version: '2.0.0',
+    prime: 1193,
+    level: 1,
+    primeWindow: [1031, 1033, 1051, 1091, 1093, 1097, 1151, 1153, 1171, 1187, 1193],
+    bundleRoles: ['framework-switcher', 'controls-register', 'evidence-library', 'audit-cycle'],
+    meshChannel: 'fall-compliance',
+    bloomVector: [4, 5, 4, 3, 4, 2, 2],
+    foldSequence: '●〜┃♡△',
+    licence: 'MIT', author: 'Simon Gant', seal: '◊·κ=1'
+  },
+  frameworks: {
+  iso27001: {
+    name: 'ISO/IEC 27001:2022',
+    shortName: 'ISO 27001',
+    authority: 'ISO/IEC',
+    version: '2022',
+    description: 'International standard for information security management systems (ISMS). Annex A 2022 has 93 controls in 4 themes (org/people/physical/tech), reduced from 114 in the 2013 edition.',
+    themes: [
+      { code: 'A.5', name: 'Organisational controls', count: 37 },
+      { code: 'A.6', name: 'People controls', count: 8 },
+      { code: 'A.7', name: 'Physical controls', count: 14 },
+      { code: 'A.8', name: 'Technological controls', count: 34 },
+    ],
+    controls: [
+      { code: 'A.5.1', title: 'Policies for information security' },
+      { code: 'A.5.2', title: 'Information security roles and responsibilities' },
+      { code: 'A.5.3', title: 'Segregation of duties' },
+      { code: 'A.5.4', title: 'Management responsibilities' },
+      { code: 'A.5.5', title: 'Contact with authorities' },
+      { code: 'A.5.6', title: 'Contact with special interest groups' },
+      { code: 'A.5.7', title: 'Threat intelligence' },
+      { code: 'A.5.8', title: 'Information security in project management' },
+      { code: 'A.5.9', title: 'Inventory of information and other associated assets' },
+      { code: 'A.5.10', title: 'Acceptable use of information and other associated assets' },
+      { code: 'A.5.11', title: 'Return of assets' },
+      { code: 'A.5.12', title: 'Classification of information' },
+      { code: 'A.5.13', title: 'Labelling of information' },
+      { code: 'A.5.14', title: 'Information transfer' },
+      { code: 'A.5.15', title: 'Access control' },
+      { code: 'A.5.16', title: 'Identity management' },
+      { code: 'A.5.17', title: 'Authentication information' },
+      { code: 'A.5.18', title: 'Access rights' },
+      { code: 'A.5.19', title: 'Information security in supplier relationships' },
+      { code: 'A.5.20', title: 'Addressing information security within supplier agreements' },
+      { code: 'A.5.21', title: 'Managing information security in the ICT supply chain' },
+      { code: 'A.5.22', title: 'Monitoring, review and change management of supplier services' },
+      { code: 'A.5.23', title: 'Information security for use of cloud services' },
+      { code: 'A.5.24', title: 'Information security incident management planning and preparation' },
+      { code: 'A.5.25', title: 'Assessment and decision on information security events' },
+      { code: 'A.5.26', title: 'Response to information security incidents' },
+      { code: 'A.5.27', title: 'Learning from information security incidents' },
+      { code: 'A.5.28', title: 'Collection of evidence' },
+      { code: 'A.5.29', title: 'Information security during disruption' },
+      { code: 'A.5.30', title: 'ICT readiness for business continuity' },
+      { code: 'A.5.31', title: 'Legal, statutory, regulatory and contractual requirements' },
+      { code: 'A.5.32', title: 'Intellectual property rights' },
+      { code: 'A.5.33', title: 'Protection of records' },
+      { code: 'A.5.34', title: 'Privacy and protection of personal identifiable information' },
+      { code: 'A.5.35', title: 'Independent review of information security' },
+      { code: 'A.5.36', title: 'Compliance with policies, rules and standards for information security' },
+      { code: 'A.5.37', title: 'Documented operating procedures' },
+      { code: 'A.6.1', title: 'Screening' },
+      { code: 'A.6.2', title: 'Terms and conditions of employment' },
+      { code: 'A.6.3', title: 'Information security awareness, education and training' },
+      { code: 'A.6.4', title: 'Disciplinary process' },
+      { code: 'A.6.5', title: 'Responsibilities after termination or change of employment' },
+      { code: 'A.6.6', title: 'Confidentiality or non-disclosure agreements' },
+      { code: 'A.6.7', title: 'Remote working' },
+      { code: 'A.6.8', title: 'Information security event reporting' },
+      { code: 'A.7.1', title: 'Physical security perimeters' },
+      { code: 'A.7.2', title: 'Physical entry' },
+      { code: 'A.7.3', title: 'Securing offices, rooms and facilities' },
+      { code: 'A.7.4', title: 'Physical security monitoring' },
+      { code: 'A.7.5', title: 'Protecting against physical and environmental threats' },
+      { code: 'A.7.6', title: 'Working in secure areas' },
+      { code: 'A.7.7', title: 'Clear desk and clear screen' },
+      { code: 'A.7.8', title: 'Equipment siting and protection' },
+      { code: 'A.7.9', title: 'Security of assets off-premises' },
+      { code: 'A.7.10', title: 'Storage media' },
+      { code: 'A.7.11', title: 'Supporting utilities' },
+      { code: 'A.7.12', title: 'Cabling security' },
+      { code: 'A.7.13', title: 'Equipment maintenance' },
+      { code: 'A.7.14', title: 'Secure disposal or re-use of equipment' },
+      { code: 'A.8.1', title: 'User end point devices' },
+      { code: 'A.8.2', title: 'Privileged access rights' },
+      { code: 'A.8.3', title: 'Information access restriction' },
+      { code: 'A.8.4', title: 'Access to source code' },
+      { code: 'A.8.5', title: 'Secure authentication' },
+      { code: 'A.8.6', title: 'Capacity management' },
+      { code: 'A.8.7', title: 'Protection against malware' },
+      { code: 'A.8.8', title: 'Management of technical vulnerabilities' },
+      { code: 'A.8.9', title: 'Configuration management' },
+      { code: 'A.8.10', title: 'Information deletion' },
+      { code: 'A.8.11', title: 'Data masking' },
+      { code: 'A.8.12', title: 'Data leakage prevention' },
+      { code: 'A.8.13', title: 'Information backup' },
+      { code: 'A.8.14', title: 'Redundancy of information processing facilities' },
+      { code: 'A.8.15', title: 'Logging' },
+      { code: 'A.8.16', title: 'Monitoring activities' },
+      { code: 'A.8.17', title: 'Clock synchronisation' },
+      { code: 'A.8.18', title: 'Use of privileged utility programs' },
+      { code: 'A.8.19', title: 'Installation of software on operational systems' },
+      { code: 'A.8.20', title: 'Networks security' },
+      { code: 'A.8.21', title: 'Security of network services' },
+      { code: 'A.8.22', title: 'Segregation of networks' },
+      { code: 'A.8.23', title: 'Web filtering' },
+      { code: 'A.8.24', title: 'Use of cryptography' },
+      { code: 'A.8.25', title: 'Secure development life cycle' },
+      { code: 'A.8.26', title: 'Application security requirements' },
+      { code: 'A.8.27', title: 'Secure system architecture and engineering principles' },
+      { code: 'A.8.28', title: 'Secure coding' },
+      { code: 'A.8.29', title: 'Security testing in development and acceptance' },
+      { code: 'A.8.30', title: 'Outsourced development' },
+      { code: 'A.8.31', title: 'Separation of development, test and production environments' },
+      { code: 'A.8.32', title: 'Change management' },
+      { code: 'A.8.33', title: 'Test information' },
+      { code: 'A.8.34', title: 'Protection of information systems during audit testing' },
+    ]
+  },
+  cyberessentials: {
+    name: 'Cyber Essentials (UK NCSC)',
+    shortName: 'CE',
+    authority: 'NCSC / IASME',
+    version: 'v3.1 (April 2024 · "Montpellier")',
+    description: 'UK government-backed scheme. Five technical control themes. Self-assessment (CE) or independent audit (CE+). Mandatory for many UK gov contracts.',
+    themes: [
+      { code: 'FW', name: 'Firewalls' },
+      { code: 'SC', name: 'Secure configuration' },
+      { code: 'AC', name: 'User access control' },
+      { code: 'MP', name: 'Malware protection' },
+      { code: 'SU', name: 'Security update management' },
+    ],
+    controls: [
+      { code: 'FW.1', title: 'Boundary firewall in place on every internet connection' },
+      { code: 'FW.2', title: 'Default inbound traffic blocked (deny by default)' },
+      { code: 'FW.3', title: 'Inbound firewall rules approved & documented with business justification' },
+      { code: 'FW.4', title: 'Default admin passwords on firewall hardware changed' },
+      { code: 'FW.5', title: 'Firewall admin interface not exposed to the internet' },
+      { code: 'FW.6', title: 'Software firewall enabled on devices used outside the trusted network' },
+      { code: 'SC.1', title: 'Unused user accounts removed or disabled' },
+      { code: 'SC.2', title: 'Default passwords changed on every device & cloud service' },
+      { code: 'SC.3', title: 'Unnecessary software, services & accounts removed or disabled' },
+      { code: 'SC.4', title: 'Auto-run disabled on removable media' },
+      { code: 'SC.5', title: 'Authentication required before granting access to information / services' },
+      { code: 'SC.6', title: 'Multi-factor authentication enabled on all cloud services' },
+      { code: 'SC.7', title: 'BIOS / UEFI boot password set on every device' },
+      { code: 'AC.1', title: 'Inventory of all users with administrative privileges' },
+      { code: 'AC.2', title: 'Administrative accounts only used for administrative tasks' },
+      { code: 'AC.3', title: 'Strong passwords / passphrases per NCSC guidance enforced' },
+      { code: 'AC.4', title: 'MFA enforced on cloud, admin & remote access' },
+      { code: 'AC.5', title: 'Documented approval process for new accounts' },
+      { code: 'AC.6', title: 'Accounts removed promptly on departure / role change' },
+      { code: 'MP.1', title: 'Anti-malware on all in-scope devices' },
+      { code: 'MP.2', title: 'Anti-malware signatures updated daily' },
+      { code: 'MP.3', title: 'Anti-malware scans all files on access / on demand' },
+      { code: 'MP.4', title: 'Web browsing protected against known-bad sites' },
+      { code: 'MP.5', title: 'Application allowlisting OR sandboxing OR signed-app-only on devices' },
+      { code: 'SU.1', title: 'All software in active vendor support' },
+      { code: 'SU.2', title: 'Automatic updates enabled where possible' },
+      { code: 'SU.3', title: 'High & critical updates applied within 14 days of release' },
+      { code: 'SU.4', title: 'Unsupported software removed from devices' },
+      { code: 'SU.5', title: 'Patch cycle documented + records retained' },
+    ]
+  },
+  soc2: {
+    name: 'SOC 2 (Type II)',
+    shortName: 'SOC 2',
+    authority: 'AICPA',
+    version: '2017 TSC (rev. 2022)',
+    description: 'AICPA Trust Services Criteria. Type I = point-in-time; Type II = operating-effectiveness over ≥6 months. Common Criteria (CC1-CC9) mandatory; A / C / PI / P additional TSCs optional.',
+    themes: [
+      { code: 'CC1', name: 'Control environment' },
+      { code: 'CC2', name: 'Communication & information' },
+      { code: 'CC3', name: 'Risk assessment' },
+      { code: 'CC4', name: 'Monitoring activities' },
+      { code: 'CC5', name: 'Control activities' },
+      { code: 'CC6', name: 'Logical & physical access controls' },
+      { code: 'CC7', name: 'System operations' },
+      { code: 'CC8', name: 'Change management' },
+      { code: 'CC9', name: 'Risk mitigation' },
+      { code: 'A', name: 'Availability (optional)' },
+      { code: 'C', name: 'Confidentiality (optional)' },
+      { code: 'PI', name: 'Processing integrity (optional)' },
+      { code: 'P', name: 'Privacy (optional)' },
+    ],
+    controls: [
+      { code: 'CC1.1', title: 'COSO Principle 1: integrity & ethical values demonstrated' },
+      { code: 'CC1.2', title: 'COSO Principle 2: board independence + oversight of internal control' },
+      { code: 'CC1.3', title: 'COSO Principle 3: structures, reporting lines, authorities & responsibilities' },
+      { code: 'CC1.4', title: 'COSO Principle 4: commitment to attract, develop & retain competent individuals' },
+      { code: 'CC1.5', title: 'COSO Principle 5: individuals held accountable for internal-control responsibilities' },
+      { code: 'CC2.1', title: 'COSO Principle 13: relevant quality information obtained & used' },
+      { code: 'CC2.2', title: 'COSO Principle 14: internal communication of objectives & responsibilities' },
+      { code: 'CC2.3', title: 'COSO Principle 15: communication with external parties' },
+      { code: 'CC3.1', title: 'COSO Principle 6: objectives specified with sufficient clarity' },
+      { code: 'CC3.2', title: 'COSO Principle 7: risks identified & analysed across the entity' },
+      { code: 'CC3.3', title: 'COSO Principle 8: fraud risk explicitly considered' },
+      { code: 'CC3.4', title: 'COSO Principle 9: changes that could significantly impact the system identified & assessed' },
+      { code: 'CC4.1', title: 'COSO Principle 16: ongoing and / or separate evaluations' },
+      { code: 'CC4.2', title: 'COSO Principle 17: deficiencies evaluated & communicated' },
+      { code: 'CC5.1', title: 'COSO Principle 10: control activities selected & developed to mitigate risks' },
+      { code: 'CC5.2', title: 'COSO Principle 11: general controls over technology selected & developed' },
+      { code: 'CC5.3', title: 'COSO Principle 12: deployed through policies & procedures' },
+      { code: 'CC6.1', title: 'Logical access security software, infrastructure & architectures' },
+      { code: 'CC6.2', title: 'User access provisioned, modified & removed based on roles / approval' },
+      { code: 'CC6.3', title: 'Access reviewed periodically; removed timely on termination / role change' },
+      { code: 'CC6.4', title: 'Physical access to facilities & information assets restricted' },
+      { code: 'CC6.5', title: 'Logical & physical protections over information assets discontinued in transit / removal' },
+      { code: 'CC6.6', title: 'Boundary protection measures against threats from outside the boundary' },
+      { code: 'CC6.7', title: 'Transmission, movement & removal of information restricted to authorised internal & external users' },
+      { code: 'CC6.8', title: 'Prevention & detection of unauthorised / malicious software' },
+      { code: 'CC7.1', title: 'Configuration standards monitored & deviations addressed' },
+      { code: 'CC7.2', title: 'System components & operations monitored against expected behaviour' },
+      { code: 'CC7.3', title: 'Security events evaluated to determine response' },
+      { code: 'CC7.4', title: 'Incidents responded to, including recovery' },
+      { code: 'CC7.5', title: 'Recovery from identified incidents & disruptions' },
+      { code: 'CC8.1', title: 'Changes to infrastructure, data, software & procedures authorised, designed, developed, tested, approved & implemented' },
+      { code: 'CC9.1', title: 'Risk mitigation activities (incl. insurance) for potential business disruptions' },
+      { code: 'CC9.2', title: 'Vendors & business partners managed for risk' },
+      { code: 'A1.1', title: 'Availability commitments & system requirements managed' },
+      { code: 'A1.2', title: 'Environmental protections, backup & recovery procedures in place' },
+      { code: 'A1.3', title: 'Recovery plan tested at planned intervals' },
+      { code: 'C1.1', title: 'Confidential information identified & maintained' },
+      { code: 'C1.2', title: 'Confidential information disposed of in accordance with commitments' },
+      { code: 'PI1.1', title: 'Processing integrity: data inputs accurate, complete & authorised' },
+      { code: 'PI1.2', title: 'System inputs measured & recorded completely & accurately' },
+      { code: 'PI1.3', title: 'System processing complete, accurate, timely & authorised' },
+      { code: 'PI1.4', title: 'Outputs reviewed for completeness, accuracy & timeliness' },
+      { code: 'PI1.5', title: 'System outputs stored completely, accurately & timely' },
+      { code: 'P1.1', title: 'Notice of privacy practices provided to data subjects' },
+      { code: 'P2.1', title: 'Consent obtained for collection, use & disclosure of personal information' },
+      { code: 'P3.1', title: 'Personal information collected consistent with notice & consent' },
+      { code: 'P4.1', title: 'Personal information used, retained & disposed of per notice & consent' },
+      { code: 'P5.1', title: 'Data subjects able to access their personal information' },
+      { code: 'P6.1', title: 'Personal information disclosed only as authorised' },
+      { code: 'P7.1', title: 'Data quality maintained' },
+      { code: 'P8.1', title: 'Privacy program monitored & enforcement enabled' },
+    ]
+  },
+  pcidss: {
+    name: 'PCI-DSS v4.0',
+    shortName: 'PCI-DSS',
+    authority: 'PCI SSC',
+    version: 'v4.0 (Mar 2022, future-dated reqs effective 31 Mar 2025)',
+    description: 'Payment Card Industry Data Security Standard. 12 high-level requirements, ~300 sub-requirements. Mandatory for any entity that stores, processes or transmits cardholder data.',
+    stub: true,
+    generateMe: 'Generate the full 12-requirement PCI-DSS v4.0 catalogue with sub-requirements (~300 controls). Use the build engine.',
+    themes: [
+      { code: '01', name: 'Install & maintain network security controls' },
+      { code: '02', name: 'Apply secure configurations to all system components' },
+      { code: '03', name: 'Protect stored account data' },
+      { code: '04', name: 'Protect cardholder data with strong cryptography during transmission' },
+      { code: '05', name: 'Protect all systems & networks from malicious software' },
+      { code: '06', name: 'Develop & maintain secure systems & software' },
+      { code: '07', name: 'Restrict access to system components & cardholder data by business need-to-know' },
+      { code: '08', name: 'Identify users & authenticate access to system components' },
+      { code: '09', name: 'Restrict physical access to cardholder data' },
+      { code: '10', name: 'Log & monitor all access to system components & cardholder data' },
+      { code: '11', name: 'Test security of systems & networks regularly' },
+      { code: '12', name: 'Support information security with organisational policies & programs' },
+    ],
+    controls: [
+    ]
+  },
+  nis2: {
+    name: 'NIS2 Directive (EU 2022/2555)',
+    shortName: 'NIS2',
+    authority: 'European Commission',
+    version: 'Directive (EU) 2022/2555 · transposition deadline 17 Oct 2024',
+    description: 'EU directive on network & information system security. Replaces NIS1. Wider scope (essential + important entities), tighter incident reporting, management accountability.',
+    stub: true,
+    generateMe: 'Generate detailed sub-controls under each of the 10 minimum risk-management measures of NIS2 Article 21. Use the build engine.',
+    themes: [
+      { code: 'M01', name: 'Policies on risk analysis & information system security' },
+      { code: 'M02', name: 'Incident handling' },
+      { code: 'M03', name: 'Business continuity (backups, DR, crisis management)' },
+      { code: 'M04', name: 'Supply chain security' },
+      { code: 'M05', name: 'Security in network & info-system acquisition, development & maintenance' },
+      { code: 'M06', name: 'Policies & procedures to assess effectiveness of cybersecurity risk-management' },
+      { code: 'M07', name: 'Basic cyber hygiene & cybersecurity training' },
+      { code: 'M08', name: 'Use of cryptography & encryption' },
+      { code: 'M09', name: 'HR security, access control & asset management' },
+      { code: 'M10', name: 'MFA, secured communications & emergency comms systems' },
+    ],
+    controls: [
+    ]
+  },
+  dora: {
+    name: 'DORA (EU 2022/2554)',
+    shortName: 'DORA',
+    authority: 'European Commission · ESAs',
+    version: 'Regulation (EU) 2022/2554 · effective 17 Jan 2025',
+    description: 'Digital Operational Resilience Act. Mandatory for EU financial entities + critical ICT third-party providers. 5 pillars: ICT risk management, incident reporting, resilience testing, third-party risk, info sharing.',
+    stub: true,
+    generateMe: 'Generate detailed sub-controls under each of the 5 DORA pillars (Articles 5-22, 23-27, 28-31, 28-44, 45). Use the build engine.',
+    themes: [
+      { code: 'P1', name: 'ICT risk management framework' },
+      { code: 'P2', name: 'ICT-related incident management, classification & reporting' },
+      { code: 'P3', name: 'Digital operational resilience testing (incl. TLPT)' },
+      { code: 'P4', name: 'ICT third-party risk management' },
+      { code: 'P5', name: 'Information & intelligence sharing arrangements' },
+    ],
+    controls: [
+    ]
+  }
+  },
+  crossMap: [
+    { from: 'iso27001:A.5.1', to: ['soc2:CC1.3', 'soc2:CC5.3'] },
+    { from: 'iso27001:A.5.2', to: ['soc2:CC1.3'] },
+    { from: 'iso27001:A.5.7', to: ['soc2:CC3.2'] },
+    { from: 'iso27001:A.5.15', to: ['soc2:CC6.1', 'soc2:CC6.2', 'cyberessentials:AC.1'] },
+    { from: 'iso27001:A.5.16', to: ['soc2:CC6.2'] },
+    { from: 'iso27001:A.5.17', to: ['soc2:CC6.1', 'cyberessentials:AC.3', 'cyberessentials:SC.5'] },
+    { from: 'iso27001:A.5.18', to: ['soc2:CC6.3', 'cyberessentials:AC.5', 'cyberessentials:AC.6'] },
+    { from: 'iso27001:A.5.19', to: ['soc2:CC9.2'] },
+    { from: 'iso27001:A.5.20', to: ['soc2:CC9.2'] },
+    { from: 'iso27001:A.5.23', to: ['soc2:CC6.1', 'soc2:CC6.6'] },
+    { from: 'iso27001:A.5.24', to: ['soc2:CC7.3', 'soc2:CC7.4'] },
+    { from: 'iso27001:A.5.26', to: ['soc2:CC7.4'] },
+    { from: 'iso27001:A.5.30', to: ['soc2:A1.2', 'soc2:A1.3'] },
+    { from: 'iso27001:A.5.34', to: ['soc2:P1.1', 'soc2:P3.1'] },
+    { from: 'iso27001:A.6.3', to: ['cyberessentials:AC.5'] },
+    { from: 'iso27001:A.6.6', to: ['soc2:CC2.3'] },
+    { from: 'iso27001:A.7.1', to: ['soc2:CC6.4'] },
+    { from: 'iso27001:A.7.2', to: ['soc2:CC6.4'] },
+    { from: 'iso27001:A.8.2', to: ['soc2:CC6.1', 'cyberessentials:AC.1', 'cyberessentials:AC.2'] },
+    { from: 'iso27001:A.8.5', to: ['soc2:CC6.1', 'cyberessentials:AC.3', 'cyberessentials:SC.5'] },
+    { from: 'iso27001:A.8.7', to: ['soc2:CC6.8', 'cyberessentials:MP.1', 'cyberessentials:MP.2', 'cyberessentials:MP.3'] },
+    { from: 'iso27001:A.8.8', to: ['soc2:CC7.1', 'cyberessentials:SU.3'] },
+    { from: 'iso27001:A.8.9', to: ['soc2:CC7.1', 'cyberessentials:SC.2', 'cyberessentials:SC.3'] },
+    { from: 'iso27001:A.8.13', to: ['soc2:A1.2'] },
+    { from: 'iso27001:A.8.15', to: ['soc2:CC7.2'] },
+    { from: 'iso27001:A.8.16', to: ['soc2:CC7.2', 'soc2:CC4.1'] },
+    { from: 'iso27001:A.8.20', to: ['soc2:CC6.6', 'cyberessentials:FW.1', 'cyberessentials:FW.2'] },
+    { from: 'iso27001:A.8.22', to: ['soc2:CC6.6'] },
+    { from: 'iso27001:A.8.24', to: ['soc2:CC6.7'] },
+    { from: 'iso27001:A.8.32', to: ['soc2:CC8.1'] },
+  ],
+  policyTemplates: [
+    { code: 'ISP', title: 'Information Security Policy', frameworks: ['iso27001', 'soc2', 'cyberessentials'], content: 'This Information Security Policy sets out the organisation\'s commitment to protecting information assets in line with ISO/IEC 27001:2022, SOC 2 Trust Services Criteria, and the UK Cyber Essentials scheme. It applies to all employees, contractors, third parties and systems used to process or store organisational information. The policy is reviewed at least annually and approved by senior management.' },
+    { code: 'AUP', title: 'Acceptable Use Policy', frameworks: ['iso27001', 'cyberessentials', 'soc2'], content: 'This policy defines acceptable and unacceptable use of company information assets, including end-user devices, accounts, networks, email, cloud services and removable media. Breach may result in disciplinary action up to and including termination, and may be reported to law enforcement where the law requires.' },
+    { code: 'ACC', title: 'Access Control Policy', frameworks: ['iso27001', 'soc2', 'cyberessentials'], content: 'Access to information systems is granted on a least-privilege, need-to-know basis. Privileged access is restricted, separated from general accounts and reviewed quarterly. MFA is mandatory for all cloud, admin and remote access. Accounts are removed promptly on termination or role change.' },
+    { code: 'IRP', title: 'Incident Response Policy', frameworks: ['iso27001', 'soc2', 'nis2', 'dora'], content: 'This policy establishes the framework for identifying, classifying, responding to and recovering from information security incidents. The Incident Response Team is empowered to take immediate action to contain incidents. Reportable incidents are notified to authorities (ICO / NCSC / competent NIS2 authority / lead overseer) within statutory timelines.' },
+    { code: 'BCP', title: 'Business Continuity & Disaster Recovery Policy', frameworks: ['iso27001', 'soc2', 'dora'], content: 'The organisation maintains a BCP/DR plan ensuring continuity of critical functions in the event of disruption. Backups are tested per defined schedule. Recovery Time Objectives (RTO) and Recovery Point Objectives (RPO) are documented per critical system.' },
+    { code: 'CMP', title: 'Change Management Policy', frameworks: ['iso27001', 'soc2'], content: 'All changes to production systems are submitted via the change-management process, risk-assessed, tested, approved by the Change Advisory Board and documented. Emergency changes follow an accelerated process with post-implementation review.' },
+    { code: 'VEN', title: 'Third-Party / Vendor Risk Policy', frameworks: ['iso27001', 'soc2', 'nis2', 'dora'], content: 'Vendors handling, accessing or processing organisational information undergo risk assessment before engagement and at renewal. Contractual provisions include security obligations, audit rights, breach notification and exit / repatriation clauses.' },
+    { code: 'CRY', title: 'Cryptography Policy', frameworks: ['iso27001', 'soc2', 'pcidss', 'nis2'], content: 'Cryptographic controls protect data in transit and at rest in line with NIST / NCSC current guidance. Approved algorithms and key lengths are documented; legacy algorithms are deprecated. Key management procedures cover generation, storage, rotation, archival and destruction.' },
+    { code: 'CLD', title: 'Cloud Services Policy', frameworks: ['iso27001', 'soc2'], content: 'Use of third-party cloud services is approved through the procurement & security review process. Shared-responsibility models are documented per provider; data classification governs which classes of data may be placed in each service tier.' },
+    { code: 'PRV', title: 'Privacy & Personal Data Policy', frameworks: ['iso27001', 'soc2', 'nis2'], content: 'Personal data is processed in accordance with UK GDPR and applicable data-protection law. Privacy notices, lawful basis, DSAR procedure, retention schedules and breach notification timelines are maintained. A DPO / equivalent role is appointed where required.' },
+  ],
+  buildPromptSystem: `You are FallSeed-Build, the generative substrate of the FallSeed Compliance wedge.
+
+You generate sovereign single-HTML tools that extend a compliance posture (ISO27001 / Cyber Essentials / SOC2 / PCI-DSS / NIS2 / DORA). Every tool you produce MUST:
+
+1. Be a COMPLETE single HTML file starting with <!DOCTYPE html> and ending with <\/html>.
+2. Include all CSS inline using the FallSeed dark palette: --void #0b0a0f, --brass #b8974a, --amber #ff8c00, --cream #e6e1d6.
+3. Include all JavaScript inline. Use 'use strict'. Any literal close-script tag in a string MUST be written as <\/script>.
+4. Store data in IndexedDB keyed by the tool name. Use auto-increment integer ids.
+5. Open a BroadcastChannel named 'fall-compliance' for mesh sync with the existing compliance wedge.
+6. Broadcast 'hello' to 'fall-signal' channel on boot with {source, type:'hello', prime, version}.
+7. Include a P3 audit chain: prevHash + SHA-256 chained entries on every state mutation. Use the Web Crypto API.
+8. Include a T0 Q&A panel that pattern-matches user questions against hard-coded compliance rules cited from the relevant framework.
+9. Include a seedDemo() function that populates 2-3 sample records on first boot (isDemo:true flag).
+10. Have at least 3 tabs: a main list view, a settings panel with Export/Import/Wipe, and a Q&A panel.
+11. Include a modal pattern for add/edit forms.
+12. Use the same CSS class names as the rest of the wedge: nav.tabs, .card, .btn, .btn.brass, .btn.sm, .toast, .modal-bg, .modal, .field, .row.
+13. Include a regulatory disclaimer at the top of the main view referencing the specific framework(s) and version.
+14. Include a manifest data: URL for PWA installability.
+15. Set <meta name="prime" content="XXXX"> where XXXX is a prime > 1193 not already used in the wedge.
+16. Name the tool with prefix 'fallcomp' (e.g. fallcompgap, fallcompiso, fallcompsoc). Lowercase no-space single-word suffix.
+
+When the user describes a tool they need, output ONLY the complete HTML file. No preamble, no markdown code fences. Start with <!DOCTYPE html> and end with <\/html>.`
+};
+
+
+// ═══════════════════════════════════════════════════════════════
+// PROVIDERS · LLM-agnostic cascade with streaming
+// ═══════════════════════════════════════════════════════════════
+const PROVIDERS = [
+  { id:'webllm',          name:'WebLLM',           tier:'T1',      tierLabel:'sovereign', priority:1, model:'Llama-3.2-3B-Instruct-q4f16_1-MLC', defaultEnabled:false, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, note:'In-browser via WebGPU. First load ~2GB. Free, offline, no key.' },
+  { id:'ollama',          name:'Ollama (local)',   tier:'T2',      tierLabel:'sovereign', priority:2, endpoint:'http://localhost:11434/v1/chat/completions', model:'llama3.2', defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, note:'localhost:11434 · install ollama · OLLAMA_ORIGINS=* for CORS' },
+  { id:'lmstudio',        name:'LM Studio (local)',tier:'T2',      tierLabel:'sovereign', priority:3, endpoint:'http://localhost:1234/v1/chat/completions',  model:'loaded',   defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, note:'localhost:1234 · loads any GGUF · enable CORS in Server tab' },
+  { id:'groq',            name:'Groq',             tier:'T3-free', tierLabel:'free',      priority:4, endpoint:'https://api.groq.com/openai/v1/chat/completions', model:'llama-3.3-70b-versatile', requiresKey:true, freeTier:true, defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, signupUrl:'https://console.groq.com/keys', note:'30 req/min · 14k tokens/min · Llama 3.3 70B · fastest cloud' },
+  { id:'openrouter-free', name:'OpenRouter free',  tier:'T3-free', tierLabel:'free',      priority:5, endpoint:'https://openrouter.ai/api/v1/chat/completions',  model:'meta-llama/llama-3.3-70b-instruct:free', requiresKey:true, freeTier:true, defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, signupUrl:'https://openrouter.ai/keys', note:'Free: Llama 3.3 70B, Gemini 2.0 Flash, Mistral · 200 req/day' },
+  { id:'google',          name:'Google AI Studio', tier:'T3-free', tierLabel:'free',      priority:6, endpoint:'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent', model:'gemini-2.5-flash', requiresKey:true, freeTier:true, defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, signupUrl:'https://aistudio.google.com/apikey', note:'Gemini 2.5 Flash free · 15 req/min · 1M tokens/day free' },
+  { id:'cerebras',        name:'Cerebras',         tier:'T3-free', tierLabel:'free',      priority:7, endpoint:'https://api.cerebras.ai/v1/chat/completions',     model:'llama-3.3-70b',  requiresKey:true, freeTier:true, defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, signupUrl:'https://cloud.cerebras.ai/platform', note:'Llama 3.3 70B at ~2200 tokens/sec · generous free tier' },
+  { id:'anthropic',       name:'Anthropic (paid)', tier:'T3-paid', tierLabel:'paid',      priority:8, endpoint:'https://api.anthropic.com/v1/messages',           model:'claude-sonnet-4-20250514', requiresKey:true, paid:true, defaultEnabled:false, supportsStream:true, pricePer1MIn:3, pricePer1MOut:15, signupUrl:'https://console.anthropic.com/', note:'Sonnet 4: ~£0.03/tool · highest quality codegen' }
+];
+
+const TABS = [
+  { id:'welcome',     label:'Welcome' },
+  { id:'frameworks',  label:'Frameworks' },
+  { id:'controls',    label:'Controls' },
+  { id:'evidence',    label:'Evidence' },
+  { id:'scope',       label:'Scope' },
+  { id:'policies',    label:'Policies' },
+  { id:'audit',       label:'Audit' },
+  { id:'gap',         label:'Gap' },
+  { id:'crossmap',    label:'Cross-map' },
+  { id:'build',       label:'Build' },
+  { id:'providers',   label:'LLM Providers' },
+  { id:'packager',    label:'Fork Seed' },
+  { id:'inspect',     label:'Inspect' },
+  { id:'settings',    label:'Settings' },
+  { id:'install',     label:'Install' }
+];
+
+let state = {
+  active: 'welcome',
+  activeFrameworks: ['iso27001'],
+  currentFw: 'iso27001',
+  filterStatus: 'all',
+  filterTheme: 'all',
+  searchTerm: '',
+  providerConfig: {},
+  rateLimits: {},
+  usage: {},
+  webllmEngine: null,
+  webllmStatus: 'unloaded',
+  autoDetected: [],
+  pkgDraft: null,
+  cascadeTrace: []
+};
+
+const $ = (s, p=document) => p.querySelector(s);
+const $$ = (s, p=document) => [...p.querySelectorAll(s)];
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = p => (p || '') + '_' + Math.random().toString(36).slice(2, 11);
+const now = () => Date.now();
+
+function toast(m, err) {
+  const t = $('#toast');
+  t.textContent = m;
+  t.classList.toggle('err', !!err);
+  t.classList.add('show');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+function openModal(title, body) {
+  $('#modalTitle').textContent = title;
+  $('#modalBody').innerHTML = body;
+  $('#modalBg').classList.add('open');
+}
+function closeModal() { $('#modalBg').classList.remove('open'); }
+
+// ═══════════════════════════════════════════════════════════════
+// IDB · 6 stores · seed config persists separately
+// ═══════════════════════════════════════════════════════════════
+const IDB_NAME = 'fallseed-compliance-v1';
+let db;
+function openDB() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(IDB_NAME, 1);
+    r.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('config'))   d.createObjectStore('config');
+      if (!d.objectStoreNames.contains('controls')) d.createObjectStore('controls', { keyPath:'id' });
+      if (!d.objectStoreNames.contains('evidence')) d.createObjectStore('evidence', { keyPath:'id' });
+      if (!d.objectStoreNames.contains('scope'))    d.createObjectStore('scope',    { keyPath:'id' });
+      if (!d.objectStoreNames.contains('policies')) d.createObjectStore('policies', { keyPath:'id' });
+      if (!d.objectStoreNames.contains('audits'))   d.createObjectStore('audits',   { keyPath:'id' });
+    };
+    r.onsuccess = e => { db = e.target.result; res(db); };
+    r.onerror = rej;
+  });
+}
+function idbGet(s, k) { return new Promise(r => { const tx=db.transaction(s,'readonly'); const q=tx.objectStore(s).get(k); q.onsuccess=()=>r(q.result); }); }
+function idbGetAll(s) { return new Promise(r => { const tx=db.transaction(s,'readonly'); const q=tx.objectStore(s).getAll(); q.onsuccess=()=>r(q.result||[]); }); }
+function idbPut(s, v, k) { return new Promise(r => { const tx=db.transaction(s,'readwrite'); const o=tx.objectStore(s); const q=k!=null?o.put(v,k):o.put(v); q.onsuccess=()=>r(true); }); }
+function idbDelete(s, k) { return new Promise(r => { const tx=db.transaction(s,'readwrite'); const q=tx.objectStore(s).delete(k); q.onsuccess=()=>r(true); }); }
+function idbClear(s) { return new Promise(r => { const tx=db.transaction(s,'readwrite'); const q=tx.objectStore(s).clear(); q.onsuccess=()=>r(true); }); }
+
+// ═══════════════════════════════════════════════════════════════
+// P3 AUDIT CHAIN · prevHash + SHA-256
+// ═══════════════════════════════════════════════════════════════
+async function sha256Hex(input) {
+  const buf = new TextEncoder().encode(typeof input === 'string' ? input : JSON.stringify(input));
+  const h = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+let chainHead = '0'.repeat(64);
+async function chainNext(payload) {
+  const prev = chainHead;
+  const full = prev + ':' + JSON.stringify(payload) + ':' + now();
+  const hash = await sha256Hex(full);
+  chainHead = hash;
+  await idbPut('config', hash, 'chainHead');
+  return { prevHash: prev, hash };
+}
+async function loadChainHead() {
+  const h = await idbGet('config', 'chainHead');
+  if (h) chainHead = h;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LOAD ALL · state from IDB
+// ═══════════════════════════════════════════════════════════════
+let SEED = JSON.parse(JSON.stringify(SEED_DEFAULT));
+
+async function loadAll() {
+  if (!db) await openDB();
+  await loadChainHead();
+  state.providerConfig = await idbGet('config', 'providerConfig') || {};
+  state.rateLimits     = await idbGet('config', 'rateLimits')     || {};
+  state.usage          = await idbGet('config', 'usage')          || {};
+  state.activeFrameworks = await idbGet('config', 'activeFrameworks') || ['iso27001'];
+  state.currentFw      = await idbGet('config', 'currentFw') || 'iso27001';
+  const savedSeed = await idbGet('config', 'forkedSeed');
+  if (savedSeed) SEED = savedSeed;
+  for (const p of PROVIDERS) {
+    if (!(p.id in state.providerConfig)) {
+      state.providerConfig[p.id] = { enabled:p.defaultEnabled, key:'', customModel:'' };
+    }
+    if (!(p.id in state.usage)) state.usage[p.id] = { totalIn:0, totalOut:0, calls:0, lastUsed:0 };
+  }
+  await idbPut('config', state.providerConfig, 'providerConfig');
+}
+async function persistProviderConfig() { await idbPut('config', state.providerConfig, 'providerConfig'); }
+async function persistRateLimits() { await idbPut('config', state.rateLimits, 'rateLimits'); }
+async function persistUsage() { await idbPut('config', state.usage, 'usage'); }
+async function persistActiveFrameworks() { await idbPut('config', state.activeFrameworks, 'activeFrameworks'); await idbPut('config', state.currentFw, 'currentFw'); }
+
+// ═══════════════════════════════════════════════════════════════
+// MESH · BroadcastChannel
+// ═══════════════════════════════════════════════════════════════
+let meshChan;
+function initMesh() {
+  try {
+    const sig = new BroadcastChannel('fall-signal');
+    sig.postMessage({ source:'fallseed-compliance', type:'hello', prime:SEED.manifest.prime, version:SEED.manifest.version, ts:now() });
+    meshChan = new BroadcastChannel(SEED.manifest.meshChannel || 'fall-compliance');
+    meshChan.onmessage = e => {
+      if (e.data?.type === 'control.updated') {
+        if (state.active === 'controls') render();
+      }
+    };
+  } catch (e) { console.warn('[mesh]', e); }
+}
+function meshBroadcast(type, payload) {
+  try {
+    meshChan?.postMessage({ v:1, type, source:'fallseed-compliance', payload, ts:now() });
+  } catch (e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AUTODETECT local providers
+// ═══════════════════════════════════════════════════════════════
+async function autoDetectLocal() {
+  state.autoDetected = [];
+  await Promise.all([
+    fetch('http://127.0.0.1:11434/api/tags').then(r => r.ok && state.autoDetected.push('ollama')).catch(()=>{}),
+    fetch('http://127.0.0.1:1234/v1/models').then(r => r.ok && state.autoDetected.push('lmstudio')).catch(()=>{})
+  ]);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CASCADE · pick provider, stream
+// ═══════════════════════════════════════════════════════════════
+function eligibleProviders() {
+  return PROVIDERS
+    .filter(p => state.providerConfig[p.id]?.enabled && (!p.requiresKey || state.providerConfig[p.id]?.key))
+    .sort((a,b) => a.priority - b.priority);
+}
+
+function trace(msg, level) {
+  state.cascadeTrace.push({ ts:now(), msg, level: level || 'info' });
+  if (state.cascadeTrace.length > 50) state.cascadeTrace.shift();
+  const el = document.getElementById('cascadeTrace');
+  if (el) renderCascadeTrace();
+}
+function renderCascadeTrace() {
+  const el = document.getElementById('cascadeTrace');
+  if (!el) return;
+  el.innerHTML = state.cascadeTrace.map(l => {
+    const c = l.level === 'ok' ? 'ok' : l.level === 'fail' ? 'fail' : '';
+    const t = new Date(l.ts).toLocaleTimeString();
+    return `<div class="line ${c}"><span class="t">${t}</span> ${esc(l.msg)}</div>`;
+  }).join('') || '<div class="line">(no calls yet)</div>';
+  el.scrollTop = el.scrollHeight;
+}
+
+async function cascadeChat(prompt, opts) {
+  opts = opts || {};
+  const onChunk = opts.onChunk || (() => {});
+  const system = opts.system || SEED.buildPromptSystem || 'You are a helpful assistant.';
+  const elig = eligibleProviders();
+  if (!elig.length) { throw new Error('No providers enabled. Configure one in LLM Providers.'); }
+  trace(`cascade starting · ${elig.length} eligible provider(s)`);
+  let lastErr = null;
+  for (const p of elig) {
+    trace(`→ trying ${p.name} (${p.tier})`);
+    try {
+      const out = await callProvider(p, system, prompt, onChunk);
+      trace(`✓ ${p.name} returned ${out.length} chars`, 'ok');
+      state.usage[p.id] = state.usage[p.id] || { totalIn:0, totalOut:0, calls:0, lastUsed:0 };
+      state.usage[p.id].calls++;
+      state.usage[p.id].totalIn += (system+prompt).length;
+      state.usage[p.id].totalOut += out.length;
+      state.usage[p.id].lastUsed = now();
+      await persistUsage();
+      return { provider: p.id, text: out };
+    } catch (e) {
+      trace(`✗ ${p.name}: ${e.message}`, 'fail');
+      lastErr = e;
+    }
+  }
+  throw new Error('All providers failed. Last: ' + (lastErr?.message || 'unknown'));
+}
+
+async function callProvider(p, system, prompt, onChunk) {
+  const cfg = state.providerConfig[p.id] || {};
+  const model = cfg.customModel || p.model;
+  if (p.id === 'webllm') {
+    if (state.webllmStatus !== 'ready') throw new Error('WebLLM not loaded — click Load in Providers tab');
+    const reply = await state.webllmEngine.chat.completions.create({
+      messages: [{role:'system',content:system},{role:'user',content:prompt}],
+      stream: true
+    });
+    let acc = '';
+    for await (const chunk of reply) {
+      const d = chunk.choices[0]?.delta?.content || '';
+      acc += d; onChunk(d);
+    }
+    return acc;
+  }
+  if (p.id === 'google') {
+    const url = p.endpoint + '?alt=sse&key=' + encodeURIComponent(cfg.key);
+    const body = {
+      systemInstruction: { parts: [{ text: system }] },
+      contents: [{ role:'user', parts:[{ text: prompt }] }],
+      generationConfig: { temperature: 0.4, maxOutputTokens: 4096 }
+    };
+    const r = await fetch(url, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(body) });
+    if (!r.ok) throw new Error('Google ' + r.status + ': ' + await r.text());
+    return await streamSSE(r, onChunk, 'google');
+  }
+  if (p.id === 'anthropic') {
+    const body = {
+      model, max_tokens: 4096,
+      stream: true,
+      system,
+      messages: [{ role:'user', content: prompt }]
+    };
+    const r = await fetch(p.endpoint, {
+      method:'POST',
+      headers:{'content-type':'application/json','x-api-key':cfg.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) throw new Error('Anthropic ' + r.status + ': ' + await r.text());
+    return await streamSSE(r, onChunk, 'anthropic');
+  }
+  // OpenAI-compatible (groq, openrouter, cerebras, ollama, lmstudio)
+  const body = { model, messages: [{role:'system',content:system},{role:'user',content:prompt}], stream: true, temperature: 0.4 };
+  const headers = { 'content-type':'application/json' };
+  if (cfg.key) headers['authorization'] = 'Bearer ' + cfg.key;
+  const r = await fetch(p.endpoint, { method:'POST', headers, body: JSON.stringify(body) });
+  if (!r.ok) throw new Error(p.name + ' ' + r.status + ': ' + (await r.text()).slice(0,160));
+  return await streamSSE(r, onChunk, 'openai');
+}
+
+async function streamSSE(response, onChunk, kind) {
+  const reader = response.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '', acc = '';
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split(/\r?\n/);
+    buf = lines.pop() || '';
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const data = line.slice(6).trim();
+      if (data === '[DONE]') continue;
+      try {
+        const j = JSON.parse(data);
+        let d = '';
+        if (kind === 'anthropic') {
+          if (j.type === 'content_block_delta') d = j.delta?.text || '';
+        } else if (kind === 'google') {
+          d = j.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        } else {
+          d = j.choices?.[0]?.delta?.content || '';
+        }
+        if (d) { acc += d; onChunk(d); }
+      } catch (e) {}
+    }
+  }
+  return acc;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// JS LITERAL · for Fork Seed packager
+// ═══════════════════════════════════════════════════════════════
+function jsLiteral(obj, indent=0) {
+  const pad = '  '.repeat(indent);
+  const padNext = '  '.repeat(indent+1);
+  if (obj === null) return 'null';
+  if (typeof obj === 'number' || typeof obj === 'boolean') return String(obj);
+  if (typeof obj === 'string') {
+    if (obj.length > 80 || obj.includes('\n')) return '`' + obj.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$\{/g,'\\${') + '`';
+    return "'" + obj.replace(/\\/g,'\\\\').replace(/'/g,"\\'") + "'";
+  }
+  if (Array.isArray(obj)) {
+    if (!obj.length) return '[]';
+    return '[\n' + obj.map(v => padNext + jsLiteral(v, indent+1)).join(',\n') + '\n' + pad + ']';
+  }
+  if (typeof obj === 'object') {
+    const keys = Object.keys(obj);
+    if (!keys.length) return '{}';
+    return '{\n' + keys.map(k => padNext + (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(k) ? k : JSON.stringify(k)) + ': ' + jsLiteral(obj[k], indent+1)).join(',\n') + '\n' + pad + '}';
+  }
+  return 'null';
+}
+
+
+
+// ═══════════════════════════════════════════════════════════════
+// ROUTER + RENDERER
+// ═══════════════════════════════════════════════════════════════
+function renderNav() {
+  const nav = $('nav.tabs');
+  nav.innerHTML = TABS.map(t => `<button data-tab="${t.id}" class="${state.active===t.id?'active':''}">${t.label}</button>`).join('');
+  nav.querySelectorAll('button').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+}
+function switchTab(id) {
+  state.active = id;
+  $$('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab===id));
+  render();
+}
+function render() {
+  const main = $('#main');
+  main.innerHTML = '';
+  const fn = {
+    welcome: renderWelcome,
+    frameworks: renderFrameworks,
+    controls: renderControls,
+    evidence: renderEvidence,
+    scope: renderScope,
+    policies: renderPolicies,
+    audit: renderAudit,
+    gap: renderGap,
+    crossmap: renderCrossMap,
+    build: renderBuild,
+    providers: renderProviders,
+    packager: renderPackager,
+    inspect: renderInspect,
+    settings: renderSettings,
+    install: renderInstall
+  }[state.active] || renderWelcome;
+  fn(main);
+}
+
+// ─── WELCOME ───────────────────────────────────────────────────
+function renderWelcome(main) {
+  const activeFwCount = state.activeFrameworks.length;
+  const totalControls = state.activeFrameworks.reduce((s,k) => s + (SEED.frameworks[k]?.controls?.length || 0), 0);
+  main.innerHTML = `
+    <div class="hero">
+      <h1>◊ FallSeed · Compliance <span class="v-badge">v${SEED.manifest.version}</span></h1>
+      <p class="lede">A sovereign single-HTML PWA for managing multi-framework compliance posture. Ships with ${Object.keys(SEED.frameworks).length} frameworks pre-loaded (ISO/IEC 27001:2022 · Cyber Essentials · SOC 2 · plus PCI-DSS / NIS2 / DORA stubs the build engine can flesh out). All evidence stays on your device. The full control register, evidence library, scope wizard, policy templates, audit cycle and gap analysis are inside this file. Fork it for a single framework, a single client, or a sector-specific posture.</p>
+    </div>
+    <div class="disclaimer"><strong>This is operational scaffolding, not certification.</strong> Certification against ISO 27001, SOC 2, CE+, PCI-DSS or any other framework requires an accredited audit. This tool helps you organise the posture; the audit body decides.</div>
+    <div class="section-h"><h2>You are loaded</h2><div class="sub">${activeFwCount} framework${activeFwCount===1?'':'s'} active · ${totalControls} controls in scope</div></div>
+    <div class="fw-grid">
+      ${Object.entries(SEED.frameworks).map(([k,f]) => {
+        const isActive = state.activeFrameworks.includes(k);
+        return `<div class="fw-card ${isActive?'active':''}" onclick="toggleFramework('${k}')">
+          ${f.stub ? '<span class="stub-flag">stub</span>' : (isActive ? '<span class="active-flag">active</span>' : '')}
+          <div class="auth">${esc(f.authority)}</div>
+          <div class="name">${esc(f.shortName)}</div>
+          <div class="desc">${esc(f.description)}</div>
+          <div class="meta">
+            <span>${f.themes.length} themes</span>
+            <span>·</span>
+            <span>${f.stub ? '(stub)' : f.controls.length + ' controls'}</span>
+            <span>·</span>
+            <span>${esc(f.version)}</span>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="section-h"><h2>Get started</h2><div class="sub">three actions to start</div></div>
+    <div class="card">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+        <div>
+          <h3>1. Define your scope</h3>
+          <p style="color:var(--cream-dim);font-size:12px;line-height:1.6;margin-bottom:10px">Capture in-scope assets, processes, data flows and sub-processors. This is the boundary your evidence sits within.</p>
+          <button class="btn brass sm" onclick="switchTab('scope')">Open Scope →</button>
+        </div>
+        <div>
+          <h3>2. Triage controls</h3>
+          <p style="color:var(--cream-dim);font-size:12px;line-height:1.6;margin-bottom:10px">Set status (pending → implemented → evidenced → audited) and owner per control. Filter by framework, theme or status.</p>
+          <button class="btn brass sm" onclick="switchTab('controls')">Open Controls →</button>
+        </div>
+        <div>
+          <h3>3. Capture evidence</h3>
+          <p style="color:var(--cream-dim);font-size:12px;line-height:1.6;margin-bottom:10px">Upload artefacts (text, files, screenshots). Each is SHA-256 hashed and chained for non-repudiation.</p>
+          <button class="btn brass sm" onclick="switchTab('evidence')">Open Evidence →</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+window.toggleFramework = async function(key) {
+  if (state.activeFrameworks.includes(key)) {
+    if (state.activeFrameworks.length === 1) { toast('Keep at least one framework active', true); return; }
+    state.activeFrameworks = state.activeFrameworks.filter(x => x !== key);
+    if (state.currentFw === key) state.currentFw = state.activeFrameworks[0];
+  } else {
+    state.activeFrameworks.push(key);
+    state.currentFw = key;
+  }
+  await persistActiveFrameworks();
+  render();
+};
+
+// ─── FRAMEWORKS ────────────────────────────────────────────────
+function renderFrameworks(main) {
+  main.innerHTML = `
+    <div class="section-h"><h2>Frameworks</h2><div class="sub">click to toggle · current = ${esc(state.currentFw)}</div></div>
+    <div class="fw-grid">
+      ${Object.entries(SEED.frameworks).map(([k,f]) => {
+        const isActive = state.activeFrameworks.includes(k);
+        return `<div class="fw-card ${isActive?'active':''}" onclick="toggleFramework('${k}')">
+          ${f.stub ? '<span class="stub-flag">stub</span>' : (isActive ? '<span class="active-flag">active</span>' : '')}
+          <div class="auth">${esc(f.authority)}</div>
+          <div class="name">${esc(f.shortName)}</div>
+          <div class="desc">${esc(f.description)}</div>
+          <div class="meta">
+            <span>${f.themes.length} themes</span>
+            <span>·</span>
+            <span>${f.stub ? '(stub — generate via Build)' : f.controls.length + ' controls'}</span>
+            <span>·</span>
+            <span>${esc(f.version)}</span>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="section-h"><h2>Themes (current = ${esc(SEED.frameworks[state.currentFw].shortName)})</h2></div>
+    <div class="fw-grid">
+      ${SEED.frameworks[state.currentFw].themes.map(t => `<div class="card" style="margin-bottom:0">
+        <div style="font-family:var(--mono);color:var(--brass);font-size:12px;letter-spacing:.06em">${esc(t.code)}</div>
+        <div style="font-family:var(--serif);font-size:14px;margin-top:4px">${esc(t.name)}</div>
+        ${t.count?'<div style="font-family:var(--mono);font-size:10px;color:var(--cream-muted);margin-top:6px;letter-spacing:.08em">'+t.count+' controls</div>':''}
+      </div>`).join('')}
+    </div>
+  `;
+}
+
+// ─── CONTROLS ──────────────────────────────────────────────────
+async function renderControls(main) {
+  main.innerHTML = '<div class="card">loading…</div>';
+  const allRecords = await idbGetAll('controls');
+  const recordsByKey = {};
+  for (const r of allRecords) recordsByKey[r.framework + ':' + r.controlCode] = r;
+  const fwKeys = state.activeFrameworks;
+  const rows = [];
+  for (const fwKey of fwKeys) {
+    const f = SEED.frameworks[fwKey];
+    if (!f || f.stub) continue;
+    for (const c of f.controls) {
+      const rec = recordsByKey[fwKey + ':' + c.code];
+      const status = rec?.status || 'pending';
+      const owner = rec?.owner || '';
+      rows.push({ framework: fwKey, fwShort: f.shortName, code: c.code, title: c.title, status, owner, theme: c.code.split('.')[0], rec });
+    }
+  }
+  // filters
+  let filtered = rows;
+  if (state.filterStatus !== 'all') filtered = filtered.filter(r => r.status === state.filterStatus);
+  if (state.filterTheme  !== 'all') filtered = filtered.filter(r => r.theme === state.filterTheme);
+  if (state.searchTerm) {
+    const t = state.searchTerm.toLowerCase();
+    filtered = filtered.filter(r => (r.code+' '+r.title+' '+r.owner).toLowerCase().includes(t));
+  }
+  // unique themes across active frameworks
+  const themes = [...new Set(rows.map(r => r.theme))];
+  main.innerHTML = `
+    <div class="section-h"><h2>Controls register</h2><div class="sub">${filtered.length} of ${rows.length}</div></div>
+    <div class="controls-bar">
+      <input type="text" placeholder="Search code / title / owner…" id="ctlSearch" value="${esc(state.searchTerm)}">
+      <select id="ctlStatus">
+        <option value="all">All statuses</option>
+        <option value="pending"     ${state.filterStatus==='pending'?'selected':''}>Pending</option>
+        <option value="inprogress"  ${state.filterStatus==='inprogress'?'selected':''}>In progress</option>
+        <option value="implemented" ${state.filterStatus==='implemented'?'selected':''}>Implemented</option>
+        <option value="evidenced"   ${state.filterStatus==='evidenced'?'selected':''}>Evidenced</option>
+        <option value="audited"     ${state.filterStatus==='audited'?'selected':''}>Audited</option>
+        <option value="na"          ${state.filterStatus==='na'?'selected':''}>N/A</option>
+      </select>
+      <select id="ctlTheme">
+        <option value="all">All themes</option>
+        ${themes.map(t => `<option value="${t}" ${state.filterTheme===t?'selected':''}>${t}</option>`).join('')}
+      </select>
+      <button class="btn sm ghost" onclick="state.filterStatus='all'; state.filterTheme='all'; state.searchTerm=''; render();">reset</button>
+    </div>
+    <table class="tbl">
+      <thead><tr><th style="width:100px">Code</th><th style="width:80px">FW</th><th>Title</th><th style="width:110px">Status</th><th style="width:160px">Owner</th><th style="width:60px"></th></tr></thead>
+      <tbody>
+        ${filtered.length ? filtered.map(r => `<tr>
+          <td><span class="code">${esc(r.code)}</span></td>
+          <td><span style="font-family:var(--mono);font-size:10px;color:var(--cream-muted)">${esc(r.fwShort)}</span></td>
+          <td>${esc(r.title)}</td>
+          <td><span class="status-pill ${r.status}">${r.status}</span></td>
+          <td>${esc(r.owner || '—')}</td>
+          <td><button class="btn sm" onclick="editControl('${r.framework}','${r.code.replace(/'/g,"\\'")}','${esc(r.title).replace(/'/g,"\\'")}')">edit</button></td>
+        </tr>`).join('') : `<tr><td colspan="6"><div class="empty-state">no matches</div></td></tr>`}
+      </tbody>
+    </table>
+  `;
+  $('#ctlSearch').addEventListener('input', e => { state.searchTerm = e.target.value; renderControls(main); });
+  $('#ctlStatus').addEventListener('change', e => { state.filterStatus = e.target.value; render(); });
+  $('#ctlTheme').addEventListener('change', e => { state.filterTheme = e.target.value; render(); });
+}
+
+window.editControl = async function(framework, code, title) {
+  const key = framework + ':' + code;
+  const recs = await idbGetAll('controls');
+  const existing = recs.find(r => r.framework === framework && r.controlCode === code) || {};
+  const body = `
+    <div class="row3">
+      <div class="field"><label>Framework</label><input value="${esc(SEED.frameworks[framework].shortName)}" disabled></div>
+      <div class="field"><label>Code</label><input value="${esc(code)}" disabled></div>
+      <div class="field"><label>Status</label>
+        <select id="ecStatus">
+          ${['pending','inprogress','implemented','evidenced','audited','na'].map(s => `<option value="${s}" ${existing.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:10px"><label>Title</label><div style="background:var(--ink);padding:9px 11px;border-radius:3px;font-size:12px;border:1px solid var(--line)">${esc(title)}</div></div>
+    <div class="row">
+      <div class="field"><label>Owner</label><input id="ecOwner" value="${esc(existing.owner||'')}" placeholder="e.g. CISO, Head of IT"></div>
+      <div class="field"><label>Due date</label><input id="ecDue" type="date" value="${esc(existing.due||'')}"></div>
+    </div>
+    <div class="field" style="margin-bottom:14px"><label>Notes</label><textarea id="ecNotes" placeholder="Implementation notes, references, gaps…">${esc(existing.notes||'')}</textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost sm" onclick="closeModal()">cancel</button>
+      <button class="btn brass sm" onclick="saveControl('${framework}','${code.replace(/'/g,"\\'")}','${esc(title).replace(/'/g,"\\'")}')">save</button>
+    </div>
+  `;
+  openModal('Edit control · ' + code, body);
+};
+
+window.saveControl = async function(framework, code, title) {
+  const status = $('#ecStatus').value;
+  const owner  = $('#ecOwner').value.trim();
+  const due    = $('#ecDue').value;
+  const notes  = $('#ecNotes').value.trim();
+  const recs = await idbGetAll('controls');
+  let r = recs.find(x => x.framework === framework && x.controlCode === code);
+  if (!r) r = { id: uid('ctl'), framework, controlCode: code, title, created: now() };
+  Object.assign(r, { status, owner, due, notes, lastModified: now() });
+  const chain = await chainNext({ kind:'control.update', id:r.id, status, owner });
+  r.prevHash = chain.prevHash; r.hash = chain.hash;
+  await idbPut('controls', r);
+  meshBroadcast('control.updated', { id:r.id, framework, code, status });
+  closeModal();
+  toast('control saved');
+  render();
+};
+
+// ─── EVIDENCE ──────────────────────────────────────────────────
+async function renderEvidence(main) {
+  const items = await idbGetAll('evidence');
+  items.sort((a,b) => (b.capturedAt||0) - (a.capturedAt||0));
+  main.innerHTML = `
+    <div class="section-h"><h2>Evidence library</h2><div class="sub">${items.length} item${items.length===1?'':'s'} · sha-256 chained</div></div>
+    <div class="card">
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <button class="btn brass sm" onclick="addEvidence('text')">+ text note</button>
+        <button class="btn sm" onclick="addEvidence('file')">+ file upload</button>
+      </div>
+      ${items.length ? items.map(it => `<div class="evidence-item">
+        <div>
+          <div class="title">${esc(it.title)}</div>
+          <div class="meta">${esc(it.type)} · ${new Date(it.capturedAt).toLocaleString()} · linked: ${(it.controlIds||[]).length} · <span class="hash">sha:${(it.contentHash||'').slice(0,12)}</span></div>
+        </div>
+        <button class="btn sm ghost" onclick="viewEvidence('${it.id}')">view</button>
+      </div>`).join('') : '<div class="empty-state">no evidence captured yet · click + to add one</div>'}
+    </div>
+  `;
+}
+
+window.addEvidence = async function(type) {
+  const body = type === 'file' ? `
+    <div class="field" style="margin-bottom:10px"><label>Title</label><input id="evTitle" placeholder="e.g. Q3 access-review screenshot"></div>
+    <div class="field" style="margin-bottom:10px"><label>File</label><input id="evFile" type="file"></div>
+    <div class="field" style="margin-bottom:10px"><label>Description</label><textarea id="evDesc" placeholder="What is this evidence of? Why does it matter?"></textarea></div>
+    <div class="field" style="margin-bottom:14px"><label>Linked controls (comma-separated framework:code · e.g. iso27001:A.5.15,soc2:CC6.1)</label><input id="evLinks" placeholder="iso27001:A.5.15,soc2:CC6.1"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost sm" onclick="closeModal()">cancel</button>
+      <button class="btn brass sm" onclick="saveEvidenceFile()">save</button>
+    </div>
+  ` : `
+    <div class="field" style="margin-bottom:10px"><label>Title</label><input id="evTitle" placeholder="e.g. Incident response procedure v2.3"></div>
+    <div class="field" style="margin-bottom:10px"><label>Content</label><textarea id="evContent" rows="10" placeholder="Paste the evidence content here…"></textarea></div>
+    <div class="field" style="margin-bottom:10px"><label>Description</label><input id="evDesc" placeholder="What is this evidence of?"></div>
+    <div class="field" style="margin-bottom:14px"><label>Linked controls (comma-separated framework:code)</label><input id="evLinks" placeholder="iso27001:A.5.15,soc2:CC6.1"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost sm" onclick="closeModal()">cancel</button>
+      <button class="btn brass sm" onclick="saveEvidenceText()">save</button>
+    </div>
+  `;
+  openModal(type === 'file' ? 'Add file evidence' : 'Add text evidence', body);
+};
+
+window.saveEvidenceText = async function() {
+  const title = $('#evTitle').value.trim();
+  const content = $('#evContent').value.trim();
+  const desc = $('#evDesc').value.trim();
+  const links = $('#evLinks').value.split(',').map(s => s.trim()).filter(Boolean);
+  if (!title || !content) { toast('title and content required', true); return; }
+  const contentHash = await sha256Hex(content);
+  const item = { id: uid('ev'), type:'text', title, description: desc, content, contentHash, controlIds: links, capturedAt: now(), capturedBy: 'local' };
+  const chain = await chainNext({ kind:'evidence.add', id:item.id, contentHash });
+  item.prevHash = chain.prevHash; item.hash = chain.hash;
+  await idbPut('evidence', item);
+  closeModal();
+  toast('evidence captured');
+  render();
+};
+
+window.saveEvidenceFile = async function() {
+  const title = $('#evTitle').value.trim();
+  const desc = $('#evDesc').value.trim();
+  const links = $('#evLinks').value.split(',').map(s => s.trim()).filter(Boolean);
+  const fInp = $('#evFile');
+  const file = fInp.files[0];
+  if (!title || !file) { toast('title and file required', true); return; }
+  const buf = await file.arrayBuffer();
+  const hashBuf = await crypto.subtle.digest('SHA-256', buf);
+  const contentHash = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+  const item = { id: uid('ev'), type:'file', title, description: desc, fileName: file.name, fileSize: file.size, fileMime: file.type, content: b64, contentHash, controlIds: links, capturedAt: now(), capturedBy: 'local' };
+  const chain = await chainNext({ kind:'evidence.add', id:item.id, contentHash });
+  item.prevHash = chain.prevHash; item.hash = chain.hash;
+  await idbPut('evidence', item);
+  closeModal();
+  toast('evidence captured (' + Math.round(file.size/1024) + ' KB)');
+  render();
+};
+
+window.viewEvidence = async function(id) {
+  const items = await idbGetAll('evidence');
+  const it = items.find(x => x.id === id);
+  if (!it) return;
+  const preview = it.type === 'file'
+    ? `<div style="background:var(--ink);padding:14px;border-radius:3px;font-family:var(--mono);font-size:11px">📎 ${esc(it.fileName)} · ${Math.round((it.fileSize||0)/1024)} KB · ${esc(it.fileMime||'')}</div>`
+    : `<div class="preview-area">${esc(it.content)}</div>`;
+  const body = `
+    <div style="font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:.06em;margin-bottom:12px">
+      captured ${new Date(it.capturedAt).toLocaleString()} · sha256 <span style="color:var(--brass)">${esc(it.contentHash)}</span>
+    </div>
+    <div class="field" style="margin-bottom:12px"><label>Description</label><div>${esc(it.description||'—')}</div></div>
+    <div class="field" style="margin-bottom:12px"><label>Linked controls</label><div>${(it.controlIds||[]).map(c => `<span class="target-pill">${esc(c)}</span>`).join(' ') || '—'}</div></div>
+    <div class="field" style="margin-bottom:14px"><label>Content</label>${preview}</div>
+    <div class="field" style="margin-bottom:14px"><label>Audit chain</label><div style="font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:.04em">prev: <span style="color:var(--brass)">${esc(it.prevHash||'').slice(0,32)}…</span><br>hash: <span style="color:var(--brass)">${esc(it.hash||'').slice(0,32)}…</span></div></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn danger sm" onclick="deleteEvidence('${it.id}')">delete</button>
+      <button class="btn sm" onclick="closeModal()">close</button>
+    </div>
+  `;
+  openModal('Evidence · ' + it.title, body);
+};
+window.deleteEvidence = async function(id) {
+  if (!confirm('Delete this evidence? Audit chain entry remains.')) return;
+  await idbDelete('evidence', id);
+  await chainNext({ kind:'evidence.delete', id });
+  closeModal();
+  toast('evidence removed');
+  render();
+};
+
+// ─── SCOPE ─────────────────────────────────────────────────────
+async function renderScope(main) {
+  const items = await idbGetAll('scope');
+  const byKind = items.reduce((m,x) => { (m[x.kind]=m[x.kind]||[]).push(x); return m; }, {});
+  const kinds = [
+    { id:'asset',         label:'Assets',         hint:'Servers, databases, repositories, SaaS tenants…' },
+    { id:'process',       label:'Processes',      hint:'Build, deploy, onboarding, IR, support…' },
+    { id:'dataflow',      label:'Data flows',     hint:'Customer data → DB → backups; logs → SIEM; etc.' },
+    { id:'subprocessor',  label:'Sub-processors', hint:'AWS, Stripe, Cloudflare, payroll provider…' },
+    { id:'system',        label:'Systems',        hint:'In-scope systems & their categorisation.' }
+  ];
+  main.innerHTML = `
+    <div class="section-h"><h2>Scope</h2><div class="sub">${items.length} item${items.length===1?'':'s'}</div></div>
+    ${kinds.map(k => `<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+        <div><h3>${k.label}</h3><div style="font-size:11px;color:var(--cream-muted)">${k.hint}</div></div>
+        <button class="btn brass sm" onclick="addScope('${k.id}')">+ add ${k.label.toLowerCase().replace(/s$/,'')}</button>
+      </div>
+      ${(byKind[k.id]||[]).map(s => `<div class="scope-item">
+        <div class="kind">${k.label}</div>
+        <div>
+          <div style="font-weight:600">${esc(s.name)}</div>
+          <div style="font-size:11px;color:var(--cream-dim);margin-top:3px">${esc(s.description||'')}</div>
+        </div>
+        <button class="btn sm ghost" onclick="deleteScope('${s.id}')">remove</button>
+      </div>`).join('') || '<div class="empty-state" style="padding:18px">none yet</div>'}
+    </div>`).join('')}
+  `;
+}
+
+window.addScope = function(kind) {
+  const body = `
+    <div class="field" style="margin-bottom:10px"><label>Name</label><input id="scName" placeholder="e.g. prod-api · payroll · customer data → backup"></div>
+    <div class="field" style="margin-bottom:10px"><label>Description</label><textarea id="scDesc"></textarea></div>
+    <div class="row">
+      <div class="field"><label>Classification</label>
+        <select id="scClass">
+          <option value="public">Public</option>
+          <option value="internal" selected>Internal</option>
+          <option value="confidential">Confidential</option>
+          <option value="restricted">Restricted</option>
+        </select>
+      </div>
+      <div class="field"><label>Owner</label><input id="scOwner"></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
+      <button class="btn ghost sm" onclick="closeModal()">cancel</button>
+      <button class="btn brass sm" onclick="saveScope('${kind}')">save</button>
+    </div>
+  `;
+  openModal('Add scope item', body);
+};
+window.saveScope = async function(kind) {
+  const item = {
+    id: uid('sc'), kind,
+    name: $('#scName').value.trim(),
+    description: $('#scDesc').value.trim(),
+    classification: $('#scClass').value,
+    owner: $('#scOwner').value.trim(),
+    created: now()
+  };
+  if (!item.name) { toast('name required', true); return; }
+  const chain = await chainNext({ kind:'scope.add', id:item.id, scopeKind:kind, name:item.name });
+  item.prevHash = chain.prevHash; item.hash = chain.hash;
+  await idbPut('scope', item);
+  closeModal();
+  toast('scope item added');
+  render();
+};
+window.deleteScope = async function(id) {
+  if (!confirm('Remove from scope?')) return;
+  await idbDelete('scope', id);
+  await chainNext({ kind:'scope.delete', id });
+  render();
+};
+
+// ─── POLICIES ──────────────────────────────────────────────────
+async function renderPolicies(main) {
+  const adopted = await idbGetAll('policies');
+  const adoptedCodes = new Set(adopted.map(p => p.code));
+  main.innerHTML = `
+    <div class="section-h"><h2>Policies</h2><div class="sub">${adopted.length}/${SEED.policyTemplates.length} adopted</div></div>
+    <div class="card">
+      <h3>Template library</h3>
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:12px">Cross-framework policy templates. Adopt, customise, lock with version.</p>
+      ${SEED.policyTemplates.map(p => `<div class="policy-row">
+        <div class="code">${esc(p.code)}</div>
+        <div>
+          <div class="title">${esc(p.title)}</div>
+          <div class="fws">${p.frameworks.join(' · ')}</div>
+        </div>
+        ${adoptedCodes.has(p.code)
+          ? `<button class="btn sm" onclick="editPolicy('${p.code}')">view / edit</button>`
+          : `<button class="btn brass sm" onclick="adoptPolicy('${p.code}')">adopt</button>`}
+      </div>`).join('')}
+    </div>
+  `;
+}
+window.adoptPolicy = async function(code) {
+  const tpl = SEED.policyTemplates.find(p => p.code === code);
+  if (!tpl) return;
+  const pol = { id: uid('pol'), code: tpl.code, title: tpl.title, frameworks: tpl.frameworks, content: tpl.content, version: '1.0', status: 'draft', adoptedAt: now() };
+  const chain = await chainNext({ kind:'policy.adopt', id:pol.id, code });
+  pol.prevHash = chain.prevHash; pol.hash = chain.hash;
+  await idbPut('policies', pol);
+  toast('policy adopted');
+  render();
+};
+window.editPolicy = async function(code) {
+  const adopted = await idbGetAll('policies');
+  const pol = adopted.find(p => p.code === code);
+  if (!pol) return;
+  const body = `
+    <div class="row3">
+      <div class="field"><label>Code</label><input value="${esc(pol.code)}" disabled></div>
+      <div class="field"><label>Version</label><input id="polVer" value="${esc(pol.version)}"></div>
+      <div class="field"><label>Status</label>
+        <select id="polStatus">
+          ${['draft','review','approved'].map(s => `<option value="${s}" ${pol.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:14px"><label>Content</label><textarea id="polContent" rows="14">${esc(pol.content)}</textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost sm" onclick="closeModal()">cancel</button>
+      <button class="btn danger sm" onclick="deletePolicy('${pol.id}')">remove adoption</button>
+      <button class="btn brass sm" onclick="savePolicy('${pol.id}')">save</button>
+    </div>
+  `;
+  openModal('Policy · ' + pol.code + ' · ' + pol.title, body);
+};
+window.savePolicy = async function(id) {
+  const adopted = await idbGetAll('policies');
+  const pol = adopted.find(p => p.id === id);
+  pol.version = $('#polVer').value.trim();
+  pol.status  = $('#polStatus').value;
+  pol.content = $('#polContent').value;
+  pol.lastModified = now();
+  const chain = await chainNext({ kind:'policy.update', id:pol.id, version:pol.version, status:pol.status });
+  pol.prevHash = chain.prevHash; pol.hash = chain.hash;
+  await idbPut('policies', pol);
+  closeModal();
+  toast('policy saved');
+  render();
+};
+window.deletePolicy = async function(id) {
+  if (!confirm('Remove this policy from adoption?')) return;
+  await idbDelete('policies', id);
+  await chainNext({ kind:'policy.remove', id });
+  closeModal();
+  render();
+};
+
+// ─── AUDIT ─────────────────────────────────────────────────────
+async function renderAudit(main) {
+  const audits = await idbGetAll('audits');
+  audits.sort((a,b) => (b.plannedFor||0) - (a.plannedFor||0));
+  main.innerHTML = `
+    <div class="section-h"><h2>Audit cycle</h2><div class="sub">${audits.length} cycle${audits.length===1?'':'s'}</div></div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="btn brass sm" onclick="addAudit('internal')">+ internal audit</button>
+      <button class="btn sm" onclick="addAudit('external')">+ external audit</button>
+      <button class="btn sm" onclick="addAudit('mgmt-review')">+ management review</button>
+    </div>
+    ${audits.length ? audits.map(a => `<div class="audit-row">
+      <div class="head">
+        <div class="title">${esc(a.type)} · ${esc(a.framework||'multi-framework')}</div>
+        <span class="status-pill ${a.status||'pending'}">${a.status||'pending'}</span>
+      </div>
+      <div class="meta">planned ${a.plannedFor?new Date(a.plannedFor).toLocaleDateString():'(unset)'} · ${(a.findings||[]).length} findings · ${a.capsClosed||0}/${a.capsTotal||0} CAPs closed</div>
+      <div style="margin-top:8px">${esc(a.scope||'')}</div>
+      <div style="margin-top:8px;display:flex;gap:6px">
+        <button class="btn sm ghost" onclick="editAudit('${a.id}')">edit</button>
+        <button class="btn sm danger" onclick="deleteAudit('${a.id}')">remove</button>
+      </div>
+    </div>`).join('') : '<div class="empty-state">no audits scheduled yet</div>'}
+  `;
+}
+window.addAudit = function(type) {
+  const body = `
+    <div class="row">
+      <div class="field"><label>Framework</label>
+        <select id="auFw"><option value="">multi-framework</option>${Object.entries(SEED.frameworks).map(([k,f]) => `<option value="${k}">${esc(f.shortName)}</option>`).join('')}</select>
+      </div>
+      <div class="field"><label>Planned for</label><input id="auDate" type="date"></div>
+    </div>
+    <div class="field" style="margin-bottom:14px"><label>Scope / objective</label><textarea id="auScope" placeholder="e.g. CC6 (logical access) — sampling-based test of joiner/leaver process Q1-Q3"></textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost sm" onclick="closeModal()">cancel</button>
+      <button class="btn brass sm" onclick="saveAudit('${type}')">create</button>
+    </div>
+  `;
+  openModal('New ' + type + ' audit', body);
+};
+window.saveAudit = async function(type) {
+  const fw = $('#auFw').value;
+  const date = $('#auDate').value;
+  const scope = $('#auScope').value.trim();
+  const a = { id: uid('aud'), type, framework: fw||null, plannedFor: date?new Date(date).getTime():null, scope, status:'pending', findings:[], capsClosed:0, capsTotal:0, created: now() };
+  const chain = await chainNext({ kind:'audit.create', id:a.id, type, framework:fw });
+  a.prevHash = chain.prevHash; a.hash = chain.hash;
+  await idbPut('audits', a);
+  closeModal(); toast('audit scheduled'); render();
+};
+window.editAudit = async function(id) {
+  const audits = await idbGetAll('audits');
+  const a = audits.find(x => x.id === id);
+  if (!a) return;
+  const body = `
+    <div class="row3">
+      <div class="field"><label>Type</label><input value="${esc(a.type)}" disabled></div>
+      <div class="field"><label>Status</label>
+        <select id="auStatus">${['pending','inprogress','complete'].map(s=>`<option value="${s}" ${a.status===s?'selected':''}>${s}</option>`).join('')}</select>
+      </div>
+      <div class="field"><label>Planned for</label><input id="auEdDate" type="date" value="${a.plannedFor?new Date(a.plannedFor).toISOString().slice(0,10):''}"></div>
+    </div>
+    <div class="field" style="margin-bottom:10px"><label>Scope</label><textarea id="auEdScope">${esc(a.scope||'')}</textarea></div>
+    <div class="row">
+      <div class="field"><label>CAPs total</label><input id="auCapsT" type="number" min="0" value="${a.capsTotal||0}"></div>
+      <div class="field"><label>CAPs closed</label><input id="auCapsC" type="number" min="0" value="${a.capsClosed||0}"></div>
+    </div>
+    <div class="field" style="margin-bottom:14px"><label>Findings (one per line)</label><textarea id="auFind" rows="6">${(a.findings||[]).join('\n')}</textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost sm" onclick="closeModal()">cancel</button>
+      <button class="btn brass sm" onclick="saveAuditEdit('${id}')">save</button>
+    </div>
+  `;
+  openModal('Edit audit', body);
+};
+window.saveAuditEdit = async function(id) {
+  const audits = await idbGetAll('audits');
+  const a = audits.find(x => x.id === id);
+  a.status = $('#auStatus').value;
+  const date = $('#auEdDate').value;
+  a.plannedFor = date?new Date(date).getTime():null;
+  a.scope = $('#auEdScope').value.trim();
+  a.capsTotal = parseInt($('#auCapsT').value,10)||0;
+  a.capsClosed = parseInt($('#auCapsC').value,10)||0;
+  a.findings = $('#auFind').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const chain = await chainNext({ kind:'audit.update', id:a.id, status:a.status });
+  a.prevHash = chain.prevHash; a.hash = chain.hash;
+  await idbPut('audits', a);
+  closeModal(); toast('audit updated'); render();
+};
+window.deleteAudit = async function(id) {
+  if (!confirm('Remove audit?')) return;
+  await idbDelete('audits', id);
+  await chainNext({ kind:'audit.delete', id });
+  render();
+};
+
+// ─── GAP ANALYSIS ──────────────────────────────────────────────
+async function renderGap(main) {
+  const recs = await idbGetAll('controls');
+  const byFw = {};
+  for (const r of recs) {
+    byFw[r.framework] = byFw[r.framework] || {};
+    byFw[r.framework][r.controlCode] = r.status;
+  }
+  const blocks = [];
+  for (const fwKey of state.activeFrameworks) {
+    const f = SEED.frameworks[fwKey];
+    if (!f || f.stub) continue;
+    const total = f.controls.length;
+    const counts = { pending:0, inprogress:0, implemented:0, evidenced:0, audited:0, na:0 };
+    for (const c of f.controls) {
+      const s = byFw[fwKey]?.[c.code] || 'pending';
+      counts[s] = (counts[s]||0) + 1;
+    }
+    const done = counts.evidenced + counts.audited + counts.na;
+    const pct = total ? Math.round(done * 100 / total) : 0;
+    const missing = f.controls.filter(c => {
+      const s = byFw[fwKey]?.[c.code] || 'pending';
+      return s === 'pending' || s === 'inprogress';
+    });
+    blocks.push(`<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+        <h3>${esc(f.shortName)}</h3>
+        <div style="font-family:var(--mono);font-size:12px;color:var(--brass)">${pct}% complete (${done}/${total})</div>
+      </div>
+      <div class="gap-bar"><div style="width:${pct}%"></div></div>
+      <div style="display:flex;gap:14px;margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:.06em;flex-wrap:wrap">
+        <span><span class="status-pill pending">${counts.pending}</span> pending</span>
+        <span><span class="status-pill inprogress">${counts.inprogress}</span> in progress</span>
+        <span><span class="status-pill implemented">${counts.implemented}</span> implemented</span>
+        <span><span class="status-pill evidenced">${counts.evidenced}</span> evidenced</span>
+        <span><span class="status-pill audited">${counts.audited}</span> audited</span>
+        <span><span class="status-pill na">${counts.na}</span> n/a</span>
+      </div>
+      ${missing.length ? `<details style="margin-top:14px"><summary style="cursor:pointer;font-size:12px;color:var(--cream-dim)">${missing.length} controls still to close →</summary>
+        <div style="margin-top:10px">${missing.slice(0,40).map(c => `<div style="padding:4px 0;font-size:11px;font-family:var(--mono);color:var(--cream-dim)"><span style="color:var(--brass)">${esc(c.code)}</span> · ${esc(c.title)}</div>`).join('')}${missing.length>40?`<div style="font-size:11px;color:var(--cream-muted);margin-top:6px">… and ${missing.length-40} more</div>`:''}</div>
+      </details>` : '<div style="margin-top:14px;color:var(--green);font-family:var(--mono);font-size:11px">✓ all controls past in-progress</div>'}
+    </div>`);
+  }
+  main.innerHTML = `
+    <div class="section-h"><h2>Gap analysis</h2><div class="sub">${state.activeFrameworks.length} framework${state.activeFrameworks.length===1?'':'s'}</div></div>
+    ${blocks.join('') || '<div class="empty-state">activate a non-stub framework to see gap analysis</div>'}
+  `;
+}
+
+// ─── CROSS-MAP ─────────────────────────────────────────────────
+function renderCrossMap(main) {
+  main.innerHTML = `
+    <div class="section-h"><h2>Cross-framework map</h2><div class="sub">${SEED.crossMap.length} equivalences · conservative · extend via Build</div></div>
+    <div class="card">
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:14px">A single control in one framework often satisfies multiple criteria in others. This map lets one piece of evidence count across all aligned controls.</p>
+      ${SEED.crossMap.map(m => `<div class="crossmap-row">
+        <div class="src">${esc(m.from)}</div>
+        <div class="targets">${m.to.map(t => `<span class="target-pill">${esc(t)}</span>`).join('')}</div>
+      </div>`).join('')}
+    </div>
+  `;
+}
+
+// ─── BUILD (cascade) ───────────────────────────────────────────
+function renderBuild(main) {
+  const examples = [
+    `Generate the full PCI-DSS v4.0 catalogue (12 requirements, ~300 sub-requirements). Output as JSON array of {code, title}.`,
+    `Generate the 10 NIS2 minimum risk-management measures with 5 sub-controls each. Output as JSON.`,
+    `Write a Statement of Applicability covering ISO 27001 Annex A controls A.5.1, A.5.15, A.8.7, A.8.20 — justify inclusion / exclusion.`,
+    `Draft an incident response runbook for a confirmed credential leak across our cloud admin accounts.`,
+    `Write an internal audit programme for SOC 2 CC6 (logical access) — 12-month cycle, monthly tests.`
+  ];
+  main.innerHTML = `
+    <div class="section-h"><h2>Build</h2><div class="sub">cascade across enabled providers</div></div>
+    <div class="card">
+      <h3>What do you need?</h3>
+      <textarea id="buildPrompt" rows="4" placeholder="Describe the policy, runbook, control catalogue, audit programme or fix you need…"></textarea>
+      <div class="example-chips">
+        ${examples.map(x => `<button onclick="document.getElementById('buildPrompt').value=this.textContent">${esc(x.slice(0,60))}…</button>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="btn brass" id="buildGo">Generate →</button>
+        <button class="btn sm ghost" onclick="document.getElementById('buildPrompt').value=''; document.getElementById('buildOutput').textContent=''">clear</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Cascade trace</h3>
+      <div class="cascade-trace" id="cascadeTrace"></div>
+    </div>
+    <div class="card">
+      <h3>Output</h3>
+      <pre class="preview-area" id="buildOutput">(idle)</pre>
+    </div>
+  `;
+  renderCascadeTrace();
+  $('#buildGo').addEventListener('click', async () => {
+    const p = $('#buildPrompt').value.trim();
+    if (!p) { toast('enter a prompt', true); return; }
+    const out = $('#buildOutput');
+    out.className = 'preview-area streaming';
+    out.textContent = '';
+    try {
+      await cascadeChat(p, { onChunk: d => { out.textContent += d; out.scrollTop = out.scrollHeight; } });
+      out.className = 'preview-area';
+    } catch (e) {
+      out.className = 'preview-area';
+      out.textContent = '✗ ' + e.message;
+    }
+  });
+}
+
+// ─── PROVIDERS ─────────────────────────────────────────────────
+function renderProviders(main) {
+  main.innerHTML = `
+    <div class="section-h"><h2>LLM providers</h2><div class="sub">priority order · auto-detected: ${state.autoDetected.length?state.autoDetected.join(', '):'none — start ollama on :11434 or LM Studio on :1234'}</div></div>
+    <div class="card">
+      ${PROVIDERS.map(p => {
+        const cfg = state.providerConfig[p.id] || {};
+        const tagClass = p.tier === 'T1' ? 't1' : p.tier === 'T2' ? 't2' : p.tier === 'T3-free' ? 'tf' : 'tp';
+        return `<div class="provider-row">
+          <div class="toggle ${cfg.enabled?'on':''}" onclick="toggleProvider('${p.id}')"></div>
+          <div class="tier-tag ${tagClass}">${p.tier}</div>
+          <div>
+            <div class="nm">${esc(p.name)}</div>
+            <div style="font-size:10px;color:var(--cream-muted);font-family:var(--mono);margin-top:2px;letter-spacing:.04em">${esc(p.note)}</div>
+          </div>
+          ${p.requiresKey ? `<input class="key-input" type="password" value="${esc(cfg.key||'')}" placeholder="${p.signupUrl?'get key →':'api key'}" onchange="setProviderKey('${p.id}', this.value)">` : '<div></div>'}
+          <div class="status-mini">${p.requiresKey && !cfg.key ? '<a href="'+(p.signupUrl||'#')+'" target="_blank" style="color:var(--brass)">sign up</a>' : (cfg.enabled?'active':'off')}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="card">
+      <h3>WebLLM (in-browser)</h3>
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:10px">First-load downloads ~2GB. After that runs entirely on-device via WebGPU. No key. No network. Slow but sovereign.</p>
+      <button class="btn brass sm" id="loadWebllm" ${state.webllmStatus==='loading'?'disabled':''}>${state.webllmStatus==='ready'?'✓ ready':state.webllmStatus==='loading'?'loading…':'load model'}</button>
+      <span style="margin-left:10px;font-size:11px;color:var(--cream-muted)" id="webllmMsg"></span>
+    </div>
+  `;
+  $('#loadWebllm').addEventListener('click', loadWebLLM);
+}
+window.toggleProvider = async function(id) {
+  state.providerConfig[id].enabled = !state.providerConfig[id].enabled;
+  await persistProviderConfig();
+  render();
+};
+window.setProviderKey = async function(id, key) {
+  state.providerConfig[id].key = key;
+  await persistProviderConfig();
+};
+async function loadWebLLM() {
+  state.webllmStatus = 'loading';
+  $('#webllmMsg').textContent = 'loading… ';
+  try {
+    const { CreateMLCEngine } = await import('https://esm.run/@mlc-ai/web-llm');
+    state.webllmEngine = await CreateMLCEngine('Llama-3.2-3B-Instruct-q4f16_1-MLC', {
+      initProgressCallback: r => { const m = $('#webllmMsg'); if (m) m.textContent = r.text || 'loading…'; }
+    });
+    state.webllmStatus = 'ready';
+    $('#webllmMsg').textContent = '✓ loaded';
+  } catch (e) {
+    state.webllmStatus = 'unloaded';
+    $('#webllmMsg').textContent = '✗ ' + e.message;
+  }
+}
+
+// ─── PACKAGER (Fork Seed) ──────────────────────────────────────
+function renderPackager(main) {
+  if (!state.pkgDraft) state.pkgDraft = JSON.parse(JSON.stringify(SEED));
+  main.innerHTML = `
+    <div class="section-h"><h2>Fork Seed</h2><div class="sub">mutate · serialise · download</div></div>
+    <div class="card">
+      <h3>Mutate the seed</h3>
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:10px">Edit the SEED constant below. When you click <em>Fork into HTML</em>, the packager fetches this very file, swaps the SEED_DEFAULT block, and downloads the mutated child as a new self-contained HTML file. The child carries the same build engine + packager — your fork is itself a forkable seed.</p>
+      <textarea id="pkgJson" rows="20" style="font-family:var(--mono);font-size:11px">${esc(JSON.stringify(state.pkgDraft, null, 2))}</textarea>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn brass" id="pkgGo">Fork into HTML →</button>
+        <button class="btn sm ghost" onclick="state.pkgDraft = JSON.parse(JSON.stringify(SEED_DEFAULT)); render()">reset to default</button>
+        <button class="btn sm ghost" onclick="state.pkgDraft = JSON.parse(JSON.stringify(SEED)); render()">reset to current</button>
+      </div>
+    </div>
+  `;
+  $('#pkgGo').addEventListener('click', forkSeed);
+}
+async function forkSeed() {
+  let draft;
+  try { draft = JSON.parse($('#pkgJson').value); } catch (e) { toast('invalid JSON: ' + e.message, true); return; }
+  const currentHtml = await (await fetch(location.href, { cache:'reload' })).text();
+  const seedStart = currentHtml.indexOf('const SEED_DEFAULT = {');
+  if (seedStart < 0) { toast('cannot find SEED_DEFAULT in source', true); return; }
+  let depth = 0, end = -1;
+  for (let i = seedStart + 'const SEED_DEFAULT = '.length; i < currentHtml.length; i++) {
+    if (currentHtml[i] === '{') depth++;
+    else if (currentHtml[i] === '}') { depth--; if (depth === 0) { end = i + 1; break; } }
+  }
+  if (end < 0) { toast('cannot parse SEED_DEFAULT', true); return; }
+  while (end < currentHtml.length && currentHtml[end] === ' ') end++;
+  if (currentHtml[end] === ';') end++;
+  const newLiteral = 'const SEED_DEFAULT = ' + jsLiteral(draft) + ';';
+  const newHtml = currentHtml.slice(0, seedStart) + newLiteral + currentHtml.slice(end);
+  // download
+  const blob = new Blob([newHtml], { type:'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const slug = (draft.manifest?.name || 'compliance').replace(/[^a-z0-9]+/gi,'-');
+  a.href = url; a.download = 'fallseed-' + slug + '-fork.html'; a.click();
+  URL.revokeObjectURL(url);
+  toast('forked into HTML · saved');
+}
+
+// ─── INSPECT ───────────────────────────────────────────────────
+async function renderInspect(main) {
+  const ctlCount = (await idbGetAll('controls')).length;
+  const evCount = (await idbGetAll('evidence')).length;
+  const scCount = (await idbGetAll('scope')).length;
+  const polCount = (await idbGetAll('policies')).length;
+  const auCount = (await idbGetAll('audits')).length;
+  main.innerHTML = `
+    <div class="section-h"><h2>Inspect</h2><div class="sub">mesh diagnostics</div></div>
+    <div class="inspect-grid">
+      <div class="inspect-card"><div class="num">${SEED.manifest.prime}</div><div class="lbl">Seed prime</div></div>
+      <div class="inspect-card"><div class="num">${Object.keys(SEED.frameworks).length}</div><div class="lbl">Frameworks loaded</div></div>
+      <div class="inspect-card"><div class="num">${state.activeFrameworks.length}</div><div class="lbl">Active</div></div>
+      <div class="inspect-card"><div class="num">${ctlCount}</div><div class="lbl">Control records</div></div>
+      <div class="inspect-card"><div class="num">${evCount}</div><div class="lbl">Evidence items</div></div>
+      <div class="inspect-card"><div class="num">${scCount}</div><div class="lbl">Scope items</div></div>
+      <div class="inspect-card"><div class="num">${polCount}</div><div class="lbl">Policies adopted</div></div>
+      <div class="inspect-card"><div class="num">${auCount}</div><div class="lbl">Audits scheduled</div></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h3>Audit chain head</h3>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--brass);word-break:break-all">${esc(chainHead)}</div>
+    </div>
+    <div class="card">
+      <h3>Mesh</h3>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--cream-dim)">channel: <span style="color:var(--brass)">${esc(SEED.manifest.meshChannel)}</span> · global signal: <span style="color:var(--brass)">fall-signal</span></div>
+    </div>
+    <div class="card">
+      <h3>Manifest</h3>
+      <pre style="font-family:var(--mono);font-size:11px;color:var(--cream-dim);white-space:pre-wrap">${esc(JSON.stringify(SEED.manifest, null, 2))}</pre>
+    </div>
+  `;
+}
+
+// ─── SETTINGS ──────────────────────────────────────────────────
+async function renderSettings(main) {
+  main.innerHTML = `
+    <div class="section-h"><h2>Settings</h2></div>
+    <div class="card">
+      <h3>Export / import</h3>
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:10px">Export everything (controls, evidence, scope, policies, audits, config + audit chain). Import overwrites.</p>
+      <div style="display:flex;gap:8px">
+        <button class="btn brass sm" onclick="exportAll()">⬇ export JSON</button>
+        <button class="btn sm" onclick="document.getElementById('importFile').click()">⬆ import JSON</button>
+        <input id="importFile" type="file" accept=".json" style="display:none" onchange="importAll(this.files[0])">
+      </div>
+    </div>
+    <div class="card">
+      <h3>Wipe</h3>
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:10px">Removes every record from this seed (IDB cleared). Cannot be undone. Audit chain head resets.</p>
+      <button class="btn danger sm" onclick="wipeAll()">⚠ wipe everything</button>
+    </div>
+  `;
+}
+window.exportAll = async function() {
+  const bundle = {
+    seed: SEED,
+    config: { providerConfig: state.providerConfig, rateLimits: state.rateLimits, usage: state.usage, activeFrameworks: state.activeFrameworks, currentFw: state.currentFw, chainHead },
+    controls: await idbGetAll('controls'),
+    evidence: await idbGetAll('evidence'),
+    scope: await idbGetAll('scope'),
+    policies: await idbGetAll('policies'),
+    audits: await idbGetAll('audits'),
+    exportedAt: now()
+  };
+  const blob = new Blob([JSON.stringify(bundle, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'fallseed-compliance-export-' + new Date().toISOString().slice(0,10) + '.json'; a.click();
+  URL.revokeObjectURL(url);
+  toast('exported');
+};
+window.importAll = async function(file) {
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const b = JSON.parse(text);
+    if (b.seed) { SEED = b.seed; await idbPut('config', SEED, 'forkedSeed'); }
+    if (b.config) {
+      state.providerConfig = b.config.providerConfig || {};
+      state.activeFrameworks = b.config.activeFrameworks || ['iso27001'];
+      state.currentFw = b.config.currentFw || 'iso27001';
+      chainHead = b.config.chainHead || chainHead;
+      await persistProviderConfig();
+      await persistActiveFrameworks();
+      await idbPut('config', chainHead, 'chainHead');
+    }
+    for (const st of ['controls','evidence','scope','policies','audits']) {
+      await idbClear(st);
+      for (const r of (b[st]||[])) await idbPut(st, r);
+    }
+    toast('imported · reload to refresh');
+    render();
+  } catch (e) { toast('import failed: '+e.message, true); }
+};
+window.wipeAll = async function() {
+  if (!confirm('Wipe every record in this seed? This cannot be undone.')) return;
+  for (const st of ['controls','evidence','scope','policies','audits']) await idbClear(st);
+  chainHead = '0'.repeat(64);
+  await idbPut('config', chainHead, 'chainHead');
+  toast('wiped');
+  render();
+};
+
+// ─── INSTALL (PWA) ─────────────────────────────────────────────
+function renderInstall(main) {
+  main.innerHTML = `
+    <div class="section-h"><h2>Install</h2><div class="sub">save this file · or install as PWA</div></div>
+    <div class="card">
+      <h3>Save as HTML</h3>
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:10px">Right-click → Save As · keeps this exact version forever. Works file:// — no server needed.</p>
+      <button class="btn brass sm" onclick="window.location.reload()">reload from server</button>
+    </div>
+    <div class="card">
+      <h3>Install as PWA</h3>
+      <p style="font-size:12px;color:var(--cream-dim);margin-bottom:10px">In Chrome / Edge: click ⊕ in address bar, or three-dot menu → Apps → Install this site. On iOS / Android: Share → Add to Home Screen.</p>
+      <p style="font-size:11px;color:var(--cream-muted);font-family:var(--mono)">Once installed, opens in its own window, works offline, no browser chrome.</p>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════════════════════
+async function boot() {
+  await openDB();
+  await loadAll();
+  initMesh();
+  await autoDetectLocal();
+  renderNav();
+  render();
+}
+boot().catch(e => { console.error('boot failed', e); document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;bottom:20px;left:20px;background:#8b1a1a;color:#fff;padding:14px 18px;border-radius:4px;z-index:9999;font-family:monospace">boot failed: '+e.message+'</div>'); });
+
+</script>
+</body>
+</html>
