@@ -178,22 +178,19 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1400px;margin:0 auto;width
     'llama-3b':  { id: 'Llama-3.2-3B-Instruct-q4f16_1-MLC',   size: '~2GB',   label: '3B · balanced · default · most laptops' },
     'qwen-7b':   { id: 'Qwen2.5-7B-Instruct-q4f16_1-MLC',     size: '~5GB',   label: '7B · capable · needs decent GPU (M-series Mac / 8GB+ VRAM)' },
     'llama-8b':  { id: 'Llama-3.1-8B-Instruct-q4f16_1-MLC',   size: '~5GB',   label: '8B · common · needs decent GPU' },
-    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' },
-  };
+    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' }};
   const DEFAULT_MODEL = 'llama-3b';
 
   const T3_PROVIDERS = {
     anthropic: { label: 'Anthropic Claude', models: ['claude-sonnet-4-5','claude-opus-4-7','claude-haiku-4-5'], default: 'claude-sonnet-4-5', url: 'https://api.anthropic.com/v1/messages' },
     openai:    { label: 'OpenAI',           models: ['gpt-4o','gpt-4o-mini','o1-mini'],                          default: 'gpt-4o-mini',      url: 'https://api.openai.com/v1/chat/completions' },
-    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' },
-  };
+    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' }};
 
   // ─── State ───────────────────────────────────────────────────────
   const STATE = {
     config: loadConfig(),
     ai: { ready: false, loading: false, progress: 0, engine: null, model: null },
-    mesh: { active: false, peers: new Map(), bc: null, signal: null },
-  };
+    mesh: { active: false, peers: new Map(), bc: null, signal: null }};
 
   function loadConfig() {
     try { return JSON.parse(localStorage.getItem('fall-kit.config') || '{}'); }
@@ -260,8 +257,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1400px;margin:0 auto;width
     if (tier === 'T2' && STATE.ai.ready && STATE.ai.engine) {
       const r = await STATE.ai.engine.chat.completions.create({
         messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userMsg }],
-        max_tokens: maxTokens,
-      });
+        max_tokens: maxTokens});
       return r.choices[0].message.content;
     }
     if (tier === 'T3' && STATE.config.api_key && STATE.config.api_provider) {
@@ -278,8 +274,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1400px;margin:0 auto;width
       const r = await fetch(T3_PROVIDERS.anthropic.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] }),
-      });
+        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] })});
       if (!r.ok) throw new Error('Anthropic ' + r.status + ': ' + (await r.text()).slice(0, 200));
       const j = await r.json();
       return j.content[0].text;
@@ -288,8 +283,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1400px;margin:0 auto;width
       const r = await fetch(T3_PROVIDERS.openai.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] }),
-      });
+        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] })});
       if (!r.ok) throw new Error('OpenAI ' + r.status);
       const j = await r.json();
       return j.choices[0].message.content;
@@ -298,8 +292,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1400px;margin:0 auto;width
       const r = await fetch(T3_PROVIDERS.google.url + model + ':generateContent?key=' + encodeURIComponent(key), {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } }),
-      });
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } })});
       if (!r.ok) throw new Error('Google ' + r.status);
       const j = await r.json();
       return j.candidates[0].content.parts[0].text;
@@ -540,8 +533,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1400px;margin:0 auto;width
     openMint: openMint,  // v1.2 · launch kcc-mint with this seed prefilled as parent
     MODELS: WEBLLM_MODELS,
     PROVIDERS: T3_PROVIDERS,
-    state: STATE,
-  };
+    state: STATE};
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
@@ -606,8 +598,7 @@ const SEED_DEFAULT = {
       { code: 'A.5', name: 'Organisational controls', count: 37 },
       { code: 'A.6', name: 'People controls', count: 8 },
       { code: 'A.7', name: 'Physical controls', count: 14 },
-      { code: 'A.8', name: 'Technological controls', count: 34 },
-    ],
+      { code: 'A.8', name: 'Technological controls', count: 34 }],
     controls: [
       { code: 'A.5.1', title: 'Policies for information security' },
       { code: 'A.5.2', title: 'Information security roles and responsibilities' },
@@ -701,8 +692,7 @@ const SEED_DEFAULT = {
       { code: 'A.8.31', title: 'Separation of development, test and production environments' },
       { code: 'A.8.32', title: 'Change management' },
       { code: 'A.8.33', title: 'Test information' },
-      { code: 'A.8.34', title: 'Protection of information systems during audit testing' },
-    ]
+      { code: 'A.8.34', title: 'Protection of information systems during audit testing' }]
   },
   cyberessentials: {
     name: 'Cyber Essentials (UK NCSC)',
@@ -715,8 +705,7 @@ const SEED_DEFAULT = {
       { code: 'SC', name: 'Secure configuration' },
       { code: 'AC', name: 'User access control' },
       { code: 'MP', name: 'Malware protection' },
-      { code: 'SU', name: 'Security update management' },
-    ],
+      { code: 'SU', name: 'Security update management' }],
     controls: [
       { code: 'FW.1', title: 'Boundary firewall in place on every internet connection' },
       { code: 'FW.2', title: 'Default inbound traffic blocked (deny by default)' },
@@ -746,8 +735,7 @@ const SEED_DEFAULT = {
       { code: 'SU.2', title: 'Automatic updates enabled where possible' },
       { code: 'SU.3', title: 'High & critical updates applied within 14 days of release' },
       { code: 'SU.4', title: 'Unsupported software removed from devices' },
-      { code: 'SU.5', title: 'Patch cycle documented + records retained' },
-    ]
+      { code: 'SU.5', title: 'Patch cycle documented + records retained' }]
   },
   soc2: {
     name: 'SOC 2 (Type II)',
@@ -768,8 +756,7 @@ const SEED_DEFAULT = {
       { code: 'A', name: 'Availability (optional)' },
       { code: 'C', name: 'Confidentiality (optional)' },
       { code: 'PI', name: 'Processing integrity (optional)' },
-      { code: 'P', name: 'Privacy (optional)' },
-    ],
+      { code: 'P', name: 'Privacy (optional)' }],
     controls: [
       { code: 'CC1.1', title: 'COSO Principle 1: integrity & ethical values demonstrated' },
       { code: 'CC1.2', title: 'COSO Principle 2: board independence + oversight of internal control' },
@@ -821,8 +808,7 @@ const SEED_DEFAULT = {
       { code: 'P5.1', title: 'Data subjects able to access their personal information' },
       { code: 'P6.1', title: 'Personal information disclosed only as authorised' },
       { code: 'P7.1', title: 'Data quality maintained' },
-      { code: 'P8.1', title: 'Privacy program monitored & enforcement enabled' },
-    ]
+      { code: 'P8.1', title: 'Privacy program monitored & enforcement enabled' }]
   },
   pcidss: {
     name: 'PCI-DSS v4.0',
@@ -844,8 +830,7 @@ const SEED_DEFAULT = {
       { code: '09', name: 'Restrict physical access to cardholder data' },
       { code: '10', name: 'Log & monitor all access to system components & cardholder data' },
       { code: '11', name: 'Test security of systems & networks regularly' },
-      { code: '12', name: 'Support information security with organisational policies & programs' },
-    ],
+      { code: '12', name: 'Support information security with organisational policies & programs' }],
     controls: [
     ]
   },
@@ -867,8 +852,7 @@ const SEED_DEFAULT = {
       { code: 'M07', name: 'Basic cyber hygiene & cybersecurity training' },
       { code: 'M08', name: 'Use of cryptography & encryption' },
       { code: 'M09', name: 'HR security, access control & asset management' },
-      { code: 'M10', name: 'MFA, secured communications & emergency comms systems' },
-    ],
+      { code: 'M10', name: 'MFA, secured communications & emergency comms systems' }],
     controls: [
     ]
   },
@@ -885,8 +869,7 @@ const SEED_DEFAULT = {
       { code: 'P2', name: 'ICT-related incident management, classification & reporting' },
       { code: 'P3', name: 'Digital operational resilience testing (incl. TLPT)' },
       { code: 'P4', name: 'ICT third-party risk management' },
-      { code: 'P5', name: 'Information & intelligence sharing arrangements' },
-    ],
+      { code: 'P5', name: 'Information & intelligence sharing arrangements' }],
     controls: [
     ]
   }
@@ -921,8 +904,7 @@ const SEED_DEFAULT = {
     { from: 'iso27001:A.8.20', to: ['soc2:CC6.6', 'cyberessentials:FW.1', 'cyberessentials:FW.2'] },
     { from: 'iso27001:A.8.22', to: ['soc2:CC6.6'] },
     { from: 'iso27001:A.8.24', to: ['soc2:CC6.7'] },
-    { from: 'iso27001:A.8.32', to: ['soc2:CC8.1'] },
-  ],
+    { from: 'iso27001:A.8.32', to: ['soc2:CC8.1'] }],
   policyTemplates: [
     { code: 'ISP', title: 'Information Security Policy', frameworks: ['iso27001', 'soc2', 'cyberessentials'], content: 'This Information Security Policy sets out the organisation\'s commitment to protecting information assets in line with ISO/IEC 27001:2022, SOC 2 Trust Services Criteria, and the UK Cyber Essentials scheme. It applies to all employees, contractors, third parties and systems used to process or store organisational information. The policy is reviewed at least annually and approved by senior management.' },
     { code: 'AUP', title: 'Acceptable Use Policy', frameworks: ['iso27001', 'cyberessentials', 'soc2'], content: 'This policy defines acceptable and unacceptable use of company information assets, including end-user devices, accounts, networks, email, cloud services and removable media. Breach may result in disciplinary action up to and including termination, and may be reported to law enforcement where the law requires.' },
@@ -933,8 +915,7 @@ const SEED_DEFAULT = {
     { code: 'VEN', title: 'Third-Party / Vendor Risk Policy', frameworks: ['iso27001', 'soc2', 'nis2', 'dora'], content: 'Vendors handling, accessing or processing organisational information undergo risk assessment before engagement and at renewal. Contractual provisions include security obligations, audit rights, breach notification and exit / repatriation clauses.' },
     { code: 'CRY', title: 'Cryptography Policy', frameworks: ['iso27001', 'soc2', 'pcidss', 'nis2'], content: 'Cryptographic controls protect data in transit and at rest in line with NIST / NCSC current guidance. Approved algorithms and key lengths are documented; legacy algorithms are deprecated. Key management procedures cover generation, storage, rotation, archival and destruction.' },
     { code: 'CLD', title: 'Cloud Services Policy', frameworks: ['iso27001', 'soc2'], content: 'Use of third-party cloud services is approved through the procurement & security review process. Shared-responsibility models are documented per provider; data classification governs which classes of data may be placed in each service tier.' },
-    { code: 'PRV', title: 'Privacy & Personal Data Policy', frameworks: ['iso27001', 'soc2', 'nis2'], content: 'Personal data is processed in accordance with UK GDPR and applicable data-protection law. Privacy notices, lawful basis, DSAR procedure, retention schedules and breach notification timelines are maintained. A DPO / equivalent role is appointed where required.' },
-  ],
+    { code: 'PRV', title: 'Privacy & Personal Data Policy', frameworks: ['iso27001', 'soc2', 'nis2'], content: 'Personal data is processed in accordance with UK GDPR and applicable data-protection law. Privacy notices, lawful basis, DSAR procedure, retention schedules and breach notification timelines are maintained. A DPO / equivalent role is appointed where required.' }],
   buildPromptSystem: `You are FallSeed-Build, the generative substrate of the FallSeed Compliance wedge.
 
 You generate sovereign single-HTML tools that extend a compliance posture (ISO27001 / Cyber Essentials / SOC2 / PCI-DSS / NIS2 / DORA). Every tool you produce MUST:
@@ -971,7 +952,7 @@ const PROVIDERS = [
   { id:'openrouter-free', name:'OpenRouter free',  tier:'T3-free', tierLabel:'free',      priority:5, endpoint:'https://openrouter.ai/api/v1/chat/completions',  model:'meta-llama/llama-3.3-70b-instruct:free', requiresKey:true, freeTier:true, defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, signupUrl:'https://openrouter.ai/keys', note:'Free: Llama 3.3 70B, Gemini 2.0 Flash, Mistral · 200 req/day' },
   { id:'google',          name:'Google AI Studio', tier:'T3-free', tierLabel:'free',      priority:6, endpoint:'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent', model:'gemini-2.5-flash', requiresKey:true, freeTier:true, defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, signupUrl:'https://aistudio.google.com/apikey', note:'Gemini 2.5 Flash free · 15 req/min · 1M tokens/day free' },
   { id:'cerebras',        name:'Cerebras',         tier:'T3-free', tierLabel:'free',      priority:7, endpoint:'https://api.cerebras.ai/v1/chat/completions',     model:'llama-3.3-70b',  requiresKey:true, freeTier:true, defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, signupUrl:'https://cloud.cerebras.ai/platform', note:'Llama 3.3 70B at ~2200 tokens/sec · generous free tier' },
-  { id:'anthropic',       name:'Anthropic (paid)', tier:'T3-paid', tierLabel:'paid',      priority:8, endpoint:'https://api.anthropic.com/v1/messages',           model:'claude-sonnet-4-20250514', requiresKey:true, paid:true, defaultEnabled:false, supportsStream:true, pricePer1MIn:3, pricePer1MOut:15, signupUrl:'https://console.anthropic.com/', note:'Sonnet 4: ~£0.03/tool · highest quality codegen' }
+  { id:'anthropic',       name:'Anthropic (paid)', tier:'T3-paid', tierLabel:'paid',      priority:8, endpoint:'https://api.anthropic.com/v1/messages',           model:'claude-sonnet-4-20250514', requiresKey:true, paid:true, defaultEnabled:false, supportsStream:true, pricePer1MIn:3, pricePer1MOut:15, signupUrl:'https://console.anthropic.com/', note:'Sonnet 4: ~TBA/tool · highest quality codegen' }
 ];
 
 const TABS = [
